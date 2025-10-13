@@ -17,11 +17,3 @@ services:
       - key: RUN_DB_SYNC
         value: true
     healthCheckPath: /health
-
-  - type: postgresql        # <-- change this from pgsql to postgres
-    name: fitlifetracker-db
-    plan: free
-    region: ohio
-    ipAllowList: []
-    databaseName: fitlifetracker
-    user: fitlifetracker_user
