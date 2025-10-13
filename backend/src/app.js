@@ -71,7 +71,7 @@ const setupRoutes = async () => {
     app.use('/api/notifications', notificationRoutes);
     app.use('/api/test', testRoutes);
     
-    console.log('✅ All routes loaded successfully!');
+    console.log(' All routes loaded successfully!');
   } catch (error) {
     console.error('❌ Error loading routes:', error);
     process.exit(1);
