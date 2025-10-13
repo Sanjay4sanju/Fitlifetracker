@@ -1,11 +1,12 @@
+# Render Blueprint configuration for Fitlifetracker backend
 services:
   - type: web
     name: fitlifetracker-backend
     env: node
     plan: free
     region: ohio
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -14,7 +15,7 @@ services:
       - key: JWT_REFRESH_SECRET
         generateValue: true
       - key: RUN_DB_SYNC
-        value: false
+        value: true
       - key: DB_HOST
         value: dpg-d3mbuc2dbo4c73bnsdag-a.ohio-postgres.render.com
       - key: DB_PORT
