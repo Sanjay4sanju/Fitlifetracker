@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "bash start.sh",
+    "start": "node server.js",
     "dev": "nodemon server.js",
     "db:init": "node scripts/init-db.js",
     "db:sync": "node -e \"import('./src/models/sync.js').then(m => m.default())\"",
