@@ -4,7 +4,7 @@ services:
     name: fitlifetracker-backend
     env: node
     plan: free
-    region: ohio  # or your preferred region
+    region: ohio
     buildCommand: npm install
     startCommand: npm start
     envVars:
@@ -15,10 +15,10 @@ services:
       - key: JWT_REFRESH_SECRET  
         generateValue: true
       - key: RUN_DB_SYNC
-        value: true  # Set to true for initial deployment, then false
+        value: true
     healthCheckPath: /health
 
-  - type: pgsql
+  - type: postgres        # <-- change this from pgsql to postgres
     name: fitlifetracker-db
     plan: free
     region: ohio
