@@ -37,7 +37,7 @@ const startServer = async () => {
       console.log(` Server running on port ${PORT}`);
       console.log(` Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(` API URL: http://localhost:${PORT}/api`);
-      console.log(`  Health Check: http://localhost:${PORT}/health`);
+      console.log(` Health Check: http://localhost:${PORT}/health`);
       console.log(` Auth Test: http://localhost:${PORT}/api/test/auth-test`);
       
       if (process.env.NODE_ENV === 'production') {
