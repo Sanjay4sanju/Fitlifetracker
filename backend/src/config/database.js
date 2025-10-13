@@ -16,8 +16,13 @@ if (process.env.NODE_ENV === 'test') {
     }
   });
 } else if (process.env.NODE_ENV === 'production') {
-  // 🚀 Production configuration for Render
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
+  // 🚀 Production configuration for Render - FIXED VERSION
+  const dbConfig = {
+    database: process.env.DB_NAME || process.env.DATABASE_NAME,
+    username: process.env.DB_USER || process.env.DATABASE_USER,
+    password: process.env.DB_PASSWORD || process.env.DATABASE_PASSWORD,
+    host: process.env.DB_HOST || process.env.DATABASE_HOST,
+    port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
     logging: false,
     dialectOptions: {
@@ -32,7 +37,15 @@ if (process.env.NODE_ENV === 'test') {
       acquire: 30000,
       idle: 10000
     }
+  };
+  
+  console.log('🔧 Database config:', { 
+    host: dbConfig.host,
+    database: dbConfig.database,
+    user: dbConfig.username 
   });
+  
+  sequelize = new Sequelize(dbConfig);
 } else {
   // 💻 Development configuration
   sequelize = new Sequelize(
@@ -61,6 +74,12 @@ if (process.env.NODE_ENV === 'test') {
     console.log('✅ Database connected successfully.');
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
+    console.error('🔧 Connection details:', {
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      user: process.env.DB_USER,
+      port: process.env.DB_PORT
+    });
   }
 })();
 
