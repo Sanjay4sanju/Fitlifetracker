@@ -18,10 +18,10 @@ if (process.env.NODE_ENV === 'test') {
 } else if (process.env.NODE_ENV === 'production') {
   // 🚀 Production configuration for Render - FIXED VERSION
   const dbConfig = {
-    database: process.env.DB_NAME || process.env.DATABASE_NAME,
-    username: process.env.DB_USER || process.env.DATABASE_USER,
-    password: process.env.DB_PASSWORD || process.env.DATABASE_PASSWORD,
-    host: process.env.DB_HOST || process.env.DATABASE_HOST,
+    database: process.env.DB_NAME,
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    host: process.env.DB_HOST,
     port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
     logging: false,
@@ -71,7 +71,7 @@ if (process.env.NODE_ENV === 'test') {
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log(' Database connected successfully.');
+    console.log('✅ Database connected successfully.');
   } catch (error) {
     console.error('❌ Database connection failed:', error.message);
     console.error('🔧 Connection details:', {

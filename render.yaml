@@ -26,4 +26,6 @@ services:
         value: fitlifetracker_user
       - key: DB_PASSWORD
         value: JzY5hGCodgWsQMq59z3HO93ZwJz0AZBR
+      - key: CLIENT_URL
+        value: https://fitlifetracke-r-b2cd.vercel.app
     healthCheckPath: /health

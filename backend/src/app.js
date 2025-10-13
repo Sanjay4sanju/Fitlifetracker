@@ -25,13 +25,39 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// CORS Configuration
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+// CORS Configuration - FIXED VERSION
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'https://fitlifetracke-r-b2cd.vercel.app',
+      /\.vercel\.app$/  // Allow any Vercel deployment
+    ];
+    
+    // Check if the origin matches any allowed pattern
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return origin === allowedOrigin;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+};
+
+app.use(cors(corsOptions));
 
 // Handle preflight requests
 app.options('*', cors());
@@ -71,7 +97,7 @@ const setupRoutes = async () => {
     app.use('/api/notifications', notificationRoutes);
     app.use('/api/test', testRoutes);
     
-    console.log(' All routes loaded successfully!');
+    console.log('✅ All routes loaded successfully!');
   } catch (error) {
     console.error('❌ Error loading routes:', error);
     process.exit(1);
@@ -98,7 +124,7 @@ app.get('/api', (req, res) => {
     message: 'FitLifeTracker API v1.0',
     version: '1.0.0',
     environment: process.env.NODE_ENV,
-    documentation: 'https://github.com/your-username/fitlifetracker',
+    documentation: 'https://github.com/johnchire827/FitlifetrackeR',
     endpoints: {
       auth: '/api/auth',
       users: '/api/users',
