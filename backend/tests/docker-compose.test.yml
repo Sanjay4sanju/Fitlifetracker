@@ -1,0 +1,26 @@
+# docker-compose.test.yml (NEW)
+version: '3.8'
+services:
+  test-postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: fitlifetracker_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+
+  test-backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=test-postgres
+      - DB_PORT=5432
+      - DB_NAME=fitlifetracker_test
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - NODE_ENV=test
+    depends_on:
+      - test-postgres
+    command: npm test

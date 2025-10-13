@@ -1,0 +1,27 @@
+# Render Blueprint configuration
+services:
+  - type: web
+    name: fitlifetracker-backend
+    env: node
+    plan: free
+    region: ohio  # or your preferred region
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET  
+        generateValue: true
+      - key: RUN_DB_SYNC
+        value: true  # Set to true for initial deployment, then false
+    healthCheckPath: /health
+
+  - type: pgsql
+    name: fitlifetracker-db
+    plan: free
+    region: ohio
+    ipAllowList: []
+    databaseName: fitlifetracker
+    user: fitlifetracker_user
