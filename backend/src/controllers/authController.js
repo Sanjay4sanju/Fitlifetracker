@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { User } from '../models/index.js';
 import { Sequelize } from 'sequelize';
-import { validationResult } from 'express-validator';
 
 const { Op } = Sequelize;
 
@@ -19,18 +18,9 @@ const generateRefreshToken = (userId) => {
 
 export const register = async (req, res, next) => {
   try {
-    console.log('Registration controller called with body:', req.body);
+    console.log('🎯 Registration controller called with body:', req.body);
     
     // Skip validation for testing
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   console.log('Validation errors:', errors.array());
-    //   return res.status(400).json({ 
-    //     message: 'Validation failed',
-    //     errors: errors.array() 
-    //   });
-    // }
-
     const { 
       username, 
       email, 
@@ -45,6 +35,8 @@ export const register = async (req, res, next) => {
       activityLevel = 'moderate' 
     } = req.body;
 
+    console.log('Creating user with:', { email, username, firstName, lastName });
+
     // Check for existing user
     const existingUser = await User.findOne({
       where: {
@@ -53,6 +45,7 @@ export const register = async (req, res, next) => {
     });
 
     if (existingUser) {
+      console.log('User already exists:', existingUser.email);
       return res.status(400).json({ 
         message: 'User already exists with this email or username' 
       });
@@ -69,7 +62,7 @@ export const register = async (req, res, next) => {
       height: parseFloat(height),
       weight: parseFloat(weight),
       gender,
-      fitnessGoal,
+      fitnessGoal: fitnessGoal === 'muscle gain' ? 'muscle_gain' : fitnessGoal,
       activityLevel
     });
 
@@ -80,7 +73,7 @@ export const register = async (req, res, next) => {
     const userResponse = user.toJSON();
     delete userResponse.password;
 
-    console.log('User registered successfully:', userResponse.email);
+    console.log('✅ User registered successfully:', userResponse.email);
     
     res.status(201).json({
       message: 'User registered successfully',
@@ -89,7 +82,7 @@ export const register = async (req, res, next) => {
       user: userResponse
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('💥 Registration error:', error);
     res.status(500).json({ 
       message: 'Internal server error during registration',
       error: error.message 
@@ -99,28 +92,21 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
-    console.log('Login controller called with body:', req.body);
+    console.log('🔑 Login controller called with body:', req.body);
     
-    // Skip validation for testing
-    // const errors = validationResult(req);
-    // if (!errors.isEmpty()) {
-    //   return res.status(400).json({ 
-    //     message: 'Validation failed',
-    //     errors: errors.array() 
-    //   });
-    // }
-
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
+      console.log('User not found for email:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     // Validate password
     const isValidPassword = await user.validatePassword(password);
     if (!isValidPassword) {
+      console.log('Invalid password for user:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
@@ -135,7 +121,7 @@ export const login = async (req, res, next) => {
     const userResponse = user.toJSON();
     delete userResponse.password;
 
-    console.log('User logged in successfully:', userResponse.email);
+    console.log('✅ User logged in successfully:', userResponse.email);
     
     res.json({
       message: 'Login successful',
@@ -144,7 +130,7 @@ export const login = async (req, res, next) => {
       user: userResponse
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('💥 Login error:', error);
     res.status(500).json({ 
       message: 'Internal server error during login',
       error: error.message 
@@ -175,6 +161,7 @@ export const refreshToken = async (req, res, next) => {
       refreshToken: newRefreshToken
     });
   } catch (error) {
+    console.error('Refresh token error:', error);
     res.status(403).json({ message: 'Invalid refresh token' });
   }
 };
@@ -191,20 +178,13 @@ export const getProfile = async (req, res, next) => {
 
     res.json({ user });
   } catch (error) {
+    console.error('Get profile error:', error);
     next(error);
   }
 };
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: 'Validation failed',
-        errors: errors.array() 
-      });
-    }
-
     const { firstName, lastName, dateOfBirth, height, weight, gender, fitnessGoal, activityLevel } = req.body;
 
     const user = await User.findByPk(req.userId);
@@ -233,6 +213,7 @@ export const updateProfile = async (req, res, next) => {
       user: userResponse
     });
   } catch (error) {
+    console.error('Update profile error:', error);
     next(error);
   }
 };

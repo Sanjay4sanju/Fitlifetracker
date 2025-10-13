@@ -5,6 +5,16 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 
+// Import routes synchronously
+import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import nutritionRoutes from './routes/nutritionRoutes.js';
+import workoutRoutes from './routes/workoutRoutes.js';
+import progressRoutes from './routes/progressRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
+import testRoutes from './routes/testRoutes.js';
+
 dotenv.config();
 
 const app = express();
@@ -25,19 +35,17 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// CORS Configuration - FIXED VERSION
+// CORS Configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
       'http://localhost:3000',
       'https://fitlifetracke-r-b2cd.vercel.app',
-      /\.vercel\.app$/  // Allow any Vercel deployment
+      /\.vercel\.app$/
     ];
     
-    // Check if the origin matches any allowed pattern
     const isAllowed = allowedOrigins.some(allowedOrigin => {
       if (allowedOrigin instanceof RegExp) {
         return allowedOrigin.test(origin);
@@ -58,11 +66,9 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
-// Handle preflight requests
 app.options('*', cors());
 
-// Body Parsing Middleware - MOVE THIS BEFORE ROUTES
+// Body Parsing Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -72,47 +78,48 @@ app.use((req, res, next) => {
   next();
 });
 
-// Import and use routes with error handling
-const setupRoutes = async () => {
-  try {
-    console.log('🔄 Loading routes...');
-    
-    // Import all routes
-    const { default: authRoutes } = await import('./routes/authRoutes.js');
-    const { default: userRoutes } = await import('./routes/userRoutes.js');
-    const { default: nutritionRoutes } = await import('./routes/nutritionRoutes.js');
-    const { default: workoutRoutes } = await import('./routes/workoutRoutes.js');
-    const { default: progressRoutes } = await import('./routes/progressRoutes.js');
-    const { default: analyticsRoutes } = await import('./routes/analyticsRoutes.js');
-    const { default: notificationRoutes } = await import('./routes/notificationRoutes.js');
-    const { default: testRoutes } = await import('./routes/testRoutes.js');
-    
-    // Use routes
-    app.use('/api/auth', authRoutes);
-    app.use('/api/users', userRoutes);
-    app.use('/api/nutrition', nutritionRoutes);
-    app.use('/api/workouts', workoutRoutes);
-    app.use('/api/progress', progressRoutes);
-    app.use('/api/analytics', analyticsRoutes);
-    app.use('/api/notifications', notificationRoutes);
-    app.use('/api/test', testRoutes);
-    
-    console.log('✅ All routes loaded successfully!');
-    
-    // Add test route to verify routing works
-    app.post('/api/test-route', (req, res) => {
-      console.log('Test route hit with body:', req.body);
-      res.json({ message: 'Test route working!', body: req.body });
-    });
-    
-  } catch (error) {
-    console.error('❌ Error loading routes:', error);
-    process.exit(1);
-  }
-};
+console.log('🔄 Mounting routes...');
 
-// Initialize routes
-setupRoutes();
+// Mount routes synchronously
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/nutrition', nutritionRoutes);
+app.use('/api/workouts', workoutRoutes);
+app.use('/api/progress', progressRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/test', testRoutes);
+
+console.log('✅ All routes mounted successfully!');
+
+// Test route
+app.post('/api/test-route', (req, res) => {
+  console.log('Test route hit with body:', req.body);
+  res.json({ message: 'Test route working!', body: req.body });
+});
+
+// TEMPORARY DIRECT ROUTES FOR TESTING
+app.post('/api/direct-register', (req, res) => {
+  console.log('🎯 DIRECT REGISTER hit with body:', req.body);
+  res.json({ 
+    message: 'Direct registration working!', 
+    received: req.body,
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.post('/api/direct-login', (req, res) => {
+  console.log('🔑 DIRECT LOGIN hit with body:', req.body);
+  res.json({ 
+    message: 'Direct login working!', 
+    received: req.body,
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/api/direct-test', (req, res) => {
+  res.json({ message: 'Direct test route working!' });
+});
 
 // Health Check Route
 app.get('/health', (req, res) => {
@@ -160,8 +167,11 @@ app.use((req, res) => {
       'GET /health',
       'POST /api/auth/register',
       'POST /api/auth/login',
-      'GET /api/test/auth-test',
-      'POST /api/test-route'
+      'GET /api/auth/test',
+      'POST /api/test-route',
+      'POST /api/direct-register',
+      'POST /api/direct-login',
+      'GET /api/direct-test'
     ]
   });
 });
@@ -170,7 +180,6 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error('Global Error Handler:', err.stack);
 
-  // CORS errors
   if (err.message === 'Not allowed by CORS') {
     return res.status(403).json({
       message: 'CORS policy: Request not allowed',
@@ -178,7 +187,6 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // Rate limit errors
   if (err.status === 429) {
     return res.status(429).json({
       message: 'Too many requests, please try again later.',
@@ -186,7 +194,6 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // Default error response
   const statusCode = err.status || err.statusCode || 500;
   const message = process.env.NODE_ENV === 'production' 
     ? 'Something went wrong!' 

@@ -1,38 +1,48 @@
 import express from 'express';
 import { register, login, refreshToken, getProfile, updateProfile } from '../controllers/authController.js';
 import { authenticateToken } from '../middleware/authMiddleware.js';
-import { registerValidator, loginValidator, updateProfileValidator } from '../validators/authValidators.js';
 
 const router = express.Router();
 
-console.log('✅ Auth routes loaded - register route available at POST /api/auth/register');
+console.log('✅ Auth router initialized');
 
-// Public routes
-router.post('/register', (req, res, next) => {
-  console.log('Register route hit with body:', req.body);
-  registerValidator(req, res, (err) => {
-    if (err) return next(err);
-    register(req, res, next);
-  });
+// Debug middleware
+router.use((req, res, next) => {
+  console.log(`🔐 Auth route: ${req.method} ${req.path}`);
+  next();
 });
 
-router.post('/login', (req, res, next) => {
-  console.log('Login route hit with body:', req.body);
-  loginValidator(req, res, (err) => {
-    if (err) return next(err);
-    login(req, res, next);
-  });
+// Public routes - SIMPLIFIED WITHOUT VALIDATORS FOR NOW
+router.post('/register', async (req, res, next) => {
+  console.log('🎯 REGISTER endpoint hit with body:', req.body);
+  try {
+    await register(req, res, next);
+  } catch (error) {
+    console.error('Route register error:', error);
+    res.status(500).json({ message: 'Registration route error', error: error.message });
+  }
+});
+
+router.post('/login', async (req, res, next) => {
+  console.log('🔑 LOGIN endpoint hit with body:', req.body);
+  try {
+    await login(req, res, next);
+  } catch (error) {
+    console.error('Route login error:', error);
+    res.status(500).json({ message: 'Login route error', error: error.message });
+  }
 });
 
 router.post('/refresh-token', refreshToken);
 
-// Protected routes
-router.get('/profile', authenticateToken, getProfile);
-router.put('/profile', authenticateToken, updateProfileValidator, updateProfile);
-
 // Test route
 router.get('/test', (req, res) => {
+  console.log('✅ Auth test route hit');
   res.json({ message: 'Auth routes working!' });
 });
+
+// Protected routes
+router.get('/profile', authenticateToken, getProfile);
+router.put('/profile', authenticateToken, updateProfile);
 
 export default router;

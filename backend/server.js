@@ -18,14 +18,12 @@ const startServer = async () => {
         await sequelize.sync({ alter: true });
         console.log('✅ Database synchronized for development');
       } else if (process.env.NODE_ENV === 'production' && process.env.RUN_DB_SYNC === 'true') {
-        // Only sync in production if explicitly enabled
         console.log('🔄 Running production database sync...');
         await sequelize.sync({ alter: false });
         console.log('✅ Production database sync completed');
       }
     } catch (dbError) {
       console.error('❌ Database connection failed:', dbError.message);
-      // Don't exit in production - the app might work without DB temporarily
       if (process.env.NODE_ENV === 'production') {
         console.log('⚠️ Starting without database connection');
       } else {
@@ -38,8 +36,9 @@ const startServer = async () => {
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🔗 API URL: http://localhost:${PORT}/api`);
       console.log(`❤️ Health Check: http://localhost:${PORT}/health`);
-      console.log(`🔐 Auth Test: http://localhost:${PORT}/api/test/auth-test`);
-      console.log(`🌐 CORS Allowed: ${process.env.CLIENT_URL || 'http://localhost:3000'}`);
+      console.log(`🔐 Register: http://localhost:${PORT}/api/auth/register`);
+      console.log(`🔐 Direct Test: http://localhost:${PORT}/api/direct-register`);
+      console.log('✅ Routes mounted: /api/auth, /api/users, /api/nutrition, /api/workouts, etc.');
       
       if (process.env.NODE_ENV === 'production') {
         console.log('🔒 Production mode: Database auto-sync disabled for safety');
