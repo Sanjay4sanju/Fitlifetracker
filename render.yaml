@@ -18,7 +18,7 @@ services:
         value: true
     healthCheckPath: /health
 
-  - type: postgres        # <-- change this from pgsql to postgres
+  - type: postgresql        # <-- change this from pgsql to postgres
     name: fitlifetracker-db
     plan: free
     region: ohio
