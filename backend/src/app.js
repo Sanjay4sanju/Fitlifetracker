@@ -62,7 +62,7 @@ app.use(cors(corsOptions));
 // Handle preflight requests
 app.options('*', cors());
 
-// Body Parsing Middleware
+// Body Parsing Middleware - MOVE THIS BEFORE ROUTES
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -98,6 +98,13 @@ const setupRoutes = async () => {
     app.use('/api/test', testRoutes);
     
     console.log('✅ All routes loaded successfully!');
+    
+    // Add test route to verify routing works
+    app.post('/api/test-route', (req, res) => {
+      console.log('Test route hit with body:', req.body);
+      res.json({ message: 'Test route working!', body: req.body });
+    });
+    
   } catch (error) {
     console.error('❌ Error loading routes:', error);
     process.exit(1);
@@ -144,6 +151,7 @@ app.get('/', (req, res) => {
 
 // 404 Handler
 app.use((req, res) => {
+  console.log(`404 - Route not found: ${req.method} ${req.originalUrl}`);
   res.status(404).json({ 
     message: `Route ${req.originalUrl} not found`,
     success: false,
@@ -152,7 +160,8 @@ app.use((req, res) => {
       'GET /health',
       'POST /api/auth/register',
       'POST /api/auth/login',
-      'GET /api/test/auth-test'
+      'GET /api/test/auth-test',
+      'POST /api/test-route'
     ]
   });
 });
