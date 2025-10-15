@@ -35,7 +35,7 @@ const Sidebar = ({ onMobileClose }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-white sidebar-z-index">
       {/* Logo and Close Button */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
         <div className="flex items-center space-x-2">
@@ -47,7 +47,8 @@ const Sidebar = ({ onMobileClose }) => {
         {onMobileClose && (
           <button 
             onClick={onMobileClose}
-            className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
+            className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors mobile-touch-target"
+            aria-label="Close menu"
           >
             <X size={20} />
           </button>
@@ -55,17 +56,19 @@ const Sidebar = ({ onMobileClose }) => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto sidebar-content">
         {menuItems.map((item) => {
           const Icon = item.icon;
+          const active = isActive(item.path);
+          
           return (
             <Link
               key={item.path}
               to={item.path}
               onClick={handleLinkClick}
-              className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
-                isActive(item.path)
-                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-500'
+              className={`sidebar-nav-item flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
+                active
+                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-500 active'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
             >
