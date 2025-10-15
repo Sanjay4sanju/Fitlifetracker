@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar for desktop */}
       <div className="hidden lg:flex lg:flex-shrink-0">
-        <Sidebar onMobileClose={closeMobileMenu} />
+        <Sidebar />
       </div>
 
       {/* Mobile sidebar overlay */}

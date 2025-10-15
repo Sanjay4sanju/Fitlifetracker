@@ -23,7 +23,15 @@ const Sidebar = ({ onMobileClose }) => {
   ];
 
   const isActive = (path) => {
-    return location.pathname === path;
+    if (path === '/' && location.pathname === '/') return true;
+    if (path !== '/' && location.pathname.startsWith(path)) return true;
+    return false;
+  };
+
+  const handleLinkClick = () => {
+    if (onMobileClose) {
+      onMobileClose();
+    }
   };
 
   return (
@@ -37,23 +45,25 @@ const Sidebar = ({ onMobileClose }) => {
             </div>
             <span className="text-xl font-bold text-gray-900">FitLifeTracker</span>
           </div>
-          <button 
-            onClick={onMobileClose}
-            className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors lg:hidden"
-          >
-            <X size={20} />
-          </button>
+          {onMobileClose && (
+            <button 
+              onClick={onMobileClose}
+              className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors lg:hidden"
+            >
+              <X size={20} />
+            </button>
+          )}
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-1">
+        <nav className="flex-1 px-4 py-6 space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                onClick={onMobileClose}
+                onClick={handleLinkClick}
                 className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
                   isActive(item.path)
                     ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-500'
