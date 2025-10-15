@@ -158,6 +158,20 @@ const Header = ({ onMenuClick }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Close search when pressing escape key
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        setSearchOpen(false);
+      }
+    };
+
+    if (searchOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [searchOpen]);
+
   const getPriorityColor = (priority) => {
     switch (priority) {
       case 'high': return 'bg-red-100 text-red-800';
@@ -177,13 +191,24 @@ const Header = ({ onMenuClick }) => {
     }
   };
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Implement search functionality here
+      console.log('Searching for:', searchQuery);
+      setSearchOpen(false);
+    }
+  };
+
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4">
+    <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4 safe-area-inset-top">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-4">
+          {/* Mobile Menu Button */}
           <button 
             onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors mobile-touch-target"
+            aria-label="Open menu"
           >
             <Menu size={20} />
           </button>
@@ -193,7 +218,8 @@ const Header = ({ onMenuClick }) => {
             {/* Mobile Search Toggle */}
             <button 
               onClick={() => setSearchOpen(true)}
-              className="sm:hidden p-2 text-gray-600 hover:text-primary-600 rounded-lg hover:bg-gray-100 transition-colors"
+              className="sm:hidden p-2 text-gray-600 hover:text-primary-600 rounded-lg hover:bg-gray-100 transition-colors mobile-touch-target"
+              aria-label="Open search"
             >
               <Search size={20} />
             </button>
@@ -206,17 +232,19 @@ const Header = ({ onMenuClick }) => {
                 placeholder="Search workouts, nutrition..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all input-focus"
+                onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit(e)}
               />
             </div>
 
             {/* Mobile Search Overlay */}
             {searchOpen && (
-              <div className="sm:hidden fixed inset-0 z-50 bg-white p-4">
+              <div className="sm:hidden fixed inset-0 z-50 bg-white p-4 safe-area-inset-top">
                 <div className="flex items-center space-x-2 mb-4">
                   <button 
                     onClick={() => setSearchOpen(false)}
-                    className="p-2 text-gray-600 rounded-lg hover:bg-gray-100"
+                    className="p-2 text-gray-600 rounded-lg hover:bg-gray-100 transition-colors mobile-touch-target"
+                    aria-label="Close search"
                   >
                     <X size={20} />
                   </button>
@@ -227,10 +255,15 @@ const Header = ({ onMenuClick }) => {
                       placeholder="Search workouts, nutrition..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent input-focus"
                       autoFocus
+                      onKeyPress={(e) => e.key === 'Enter' && handleSearchSubmit(e)}
                     />
                   </div>
+                </div>
+                {/* Search suggestions can be added here */}
+                <div className="text-center text-gray-500 text-sm">
+                  Type and press Enter to search
                 </div>
               </div>
             )}
@@ -242,7 +275,8 @@ const Header = ({ onMenuClick }) => {
           <div className="relative notification-dropdown">
             <button 
               onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-              className="relative p-2 text-gray-600 hover:text-primary-600 rounded-lg hover:bg-gray-100 transition-colors"
+              className="relative p-2 text-gray-600 hover:text-primary-600 rounded-lg hover:bg-gray-100 transition-colors mobile-touch-target"
+              aria-label="Notifications"
             >
               <Bell size={20} />
               {unreadCount > 0 && (
@@ -268,9 +302,14 @@ const Header = ({ onMenuClick }) => {
                     notifications.map((notification) => (
                       <div 
                         key={notification.id}
-                        className={`p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                        className={`p-4 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer ${
                           notification.unread ? 'bg-blue-50' : ''
                         }`}
+                        onClick={() => {
+                          // Handle notification click
+                          console.log('Notification clicked:', notification.id);
+                          setIsNotificationOpen(false);
+                        }}
                       >
                         <div className="flex items-start space-x-3">
                           <div className="flex-shrink-0">
@@ -308,7 +347,14 @@ const Header = ({ onMenuClick }) => {
                 </div>
 
                 <div className="p-2 border-t border-gray-200">
-                  <button className="w-full text-center text-sm text-primary-600 hover:text-primary-700 py-2">
+                  <button 
+                    className="w-full text-center text-sm text-primary-600 hover:text-primary-700 py-2 transition-colors"
+                    onClick={() => {
+                      // Mark all as read functionality
+                      console.log('Mark all as read');
+                      setIsNotificationOpen(false);
+                    }}
+                  >
                     Mark all as read
                   </button>
                 </div>
@@ -320,7 +366,8 @@ const Header = ({ onMenuClick }) => {
           <div className="relative profile-dropdown">
             <button 
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors mobile-touch-target"
+              aria-label="User profile"
             >
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-medium text-gray-900 truncate max-w-[120px]">
@@ -347,6 +394,16 @@ const Header = ({ onMenuClick }) => {
                   </div>
                 </div>
                 <div className="p-2">
+                  <button 
+                    onClick={() => {
+                      // Navigate to settings or profile
+                      console.log('Navigate to settings');
+                      setIsProfileOpen(false);
+                    }}
+                    className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md transition-colors mb-1"
+                  >
+                    Settings
+                  </button>
                   <button 
                     onClick={logout}
                     className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"
