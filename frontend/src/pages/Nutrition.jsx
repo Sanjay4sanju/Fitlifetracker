@@ -195,7 +195,7 @@ const Nutrition = () => {
           <p className="text-red-600 text-lg mb-2">Error loading nutrition data</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm"
           >
             Retry
           </button>
@@ -205,13 +205,13 @@ const Nutrition = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-6 border border-green-100">
+      <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-4 sm:p-6 border border-green-100">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Nutrition Tracking</h1>
-            <p className="text-gray-600 text-lg">Monitor your food intake and nutritional balance</p>
+          <div className="flex-1">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Nutrition Tracking</h1>
+            <p className="text-gray-600 text-sm sm:text-lg">Monitor your food intake and nutritional balance</p>
             <div className="flex items-center gap-2 mt-3 text-sm text-gray-500">
               <TrendingUp size={16} />
               <span>Track your macros and calories with precision</span>
@@ -219,7 +219,7 @@ const Nutrition = () => {
           </div>
           <Button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+            className="flex items-center space-x-2 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 w-full sm:w-auto justify-center"
             size="lg"
           >
             <Plus size={20} />
@@ -232,10 +232,10 @@ const Nutrition = () => {
       <NutritionStats weeklyStats={calculateWeeklyStats} />
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 sm:gap-6">
         {/* Filters Sidebar */}
-        <div className="xl:col-span-1 space-y-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+        <div className="xl:col-span-1 space-y-4 sm:space-y-6">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Filter size={20} />
               Filters & Search
@@ -338,13 +338,13 @@ const Nutrition = () => {
         {/* Entries Content */}
         <div className="xl:col-span-3">
           {/* Entries Header */}
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 mb-6">
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200 mb-4 sm:mb-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
                   Food Entries ({filteredEntries.length})
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm">
                   {selectedDate 
                     ? `Showing entries from ${format(new Date(selectedDate), 'MMMM d, yyyy')}`
                     : 'Showing all entries'
@@ -360,7 +360,7 @@ const Nutrition = () => {
 
           {/* Entries Grid/List */}
           {filters.viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {filteredEntries.map(entry => (
                 <NutritionEntryCard
                   key={entry.id}
@@ -370,13 +370,13 @@ const Nutrition = () => {
               ))}
             </div>
           ) : (
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {Object.entries(entriesByDate).map(([date, dateEntries]) => (
-                <div key={date} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                <div key={date} className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     {format(new Date(date), 'EEEE, MMMM d, yyyy')}
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                     {dateEntries.map(entry => (
                       <NutritionEntryCard
                         key={entry.id}

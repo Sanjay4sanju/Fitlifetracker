@@ -49,7 +49,7 @@ const Dashboard = () => {
           <p className="text-red-600">Error loading dashboard data</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="mt-2 px-4 py-2 bg-primary-600 text-white rounded"
+            className="mt-2 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm"
           >
             Retry
           </button>
@@ -228,20 +228,20 @@ const Dashboard = () => {
   .slice(0, 10);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">
+      <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl p-4 sm:p-6 text-white">
+        <h1 className="text-xl sm:text-2xl font-bold mb-2">
           Welcome back, {user?.firstName || 'User'}! 👋 
         </h1>
-        <p className="text-primary-100">
+        <p className="text-primary-100 text-sm sm:text-base">
           {user?.fitnessGoal ? 
             `You're making great progress on your ${user.fitnessGoal.replace('_', ' ')} journey.` :
             'Track your fitness and nutrition to achieve your goals.'
           }
         </p>
         {(user?.weight || user?.height) && (
-          <div className="flex items-center space-x-4 mt-3 text-primary-200">
+          <div className="flex items-center space-x-4 mt-3 text-primary-200 text-sm">
             {user?.weight && (
               <>
                 <Scale size={16} />
@@ -259,16 +259,20 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => (
           <StatsCard key={index} {...stat} />
         ))}
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <NutritionChart data={nutritionData} />
-        <WorkoutChart data={workoutData} />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
+        <div className="min-h-[300px]">
+          <NutritionChart data={nutritionData} />
+        </div>
+        <div className="min-h-[300px]">
+          <WorkoutChart data={workoutData} />
+        </div>
       </div>
 
       {/* Recent Activities */}

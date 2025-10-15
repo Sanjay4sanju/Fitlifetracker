@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Search, User, Menu, Dumbbell, Utensils, TrendingUp, Target, Clock } from 'lucide-react';
+import { Bell, Search, User, Menu, X, Dumbbell, Utensils, TrendingUp, Target, Clock } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { workoutAPI, nutritionAPI, progressAPI } from '../../services/api';
@@ -8,6 +8,8 @@ const Header = ({ onMenuClick }) => {
   const { user, logout } = useAuth();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch data for notifications
   const { data: workoutData } = useQuery({
@@ -147,6 +149,9 @@ const Header = ({ onMenuClick }) => {
       if (!event.target.closest('.profile-dropdown')) {
         setIsProfileOpen(false);
       }
+      if (!event.target.closest('.search-container')) {
+        setSearchOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
@@ -173,26 +178,66 @@ const Header = ({ onMenuClick }) => {
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+    <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <button 
             onClick={onMenuClick}
             className="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
           >
             <Menu size={20} />
           </button>
-          <div className="relative max-w-md w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search workouts, nutrition..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-            />
+          
+          {/* Search Bar - Responsive */}
+          <div className="search-container relative">
+            {/* Mobile Search Toggle */}
+            <button 
+              onClick={() => setSearchOpen(true)}
+              className="sm:hidden p-2 text-gray-600 hover:text-primary-600 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <Search size={20} />
+            </button>
+
+            {/* Desktop Search */}
+            <div className="hidden sm:block relative max-w-md w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search workouts, nutrition..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+              />
+            </div>
+
+            {/* Mobile Search Overlay */}
+            {searchOpen && (
+              <div className="sm:hidden fixed inset-0 z-50 bg-white p-4">
+                <div className="flex items-center space-x-2 mb-4">
+                  <button 
+                    onClick={() => setSearchOpen(false)}
+                    className="p-2 text-gray-600 rounded-lg hover:bg-gray-100"
+                  >
+                    <X size={20} />
+                  </button>
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <input
+                      type="text"
+                      placeholder="Search workouts, nutrition..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4">
           {/* Notifications Dropdown */}
           <div className="relative notification-dropdown">
             <button 
@@ -275,21 +320,25 @@ const Header = ({ onMenuClick }) => {
           <div className="relative profile-dropdown">
             <button 
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <div className="text-right hidden sm:block">
-                <p className="font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
-                <p className="text-sm text-gray-500 capitalize">{user?.fitnessGoal?.replace('_', ' ')}</p>
+                <p className="text-sm font-medium text-gray-900 truncate max-w-[120px]">
+                  {user?.firstName} {user?.lastName}
+                </p>
+                <p className="text-xs text-gray-500 capitalize">
+                  {user?.fitnessGoal?.replace('_', ' ')}
+                </p>
               </div>
-              <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
-                <User size={18} className="text-white" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                <User size={16} className="text-white" />
               </div>
             </button>
             
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+              <div className="absolute right-0 mt-2 w-48 sm:w-64 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
                 <div className="p-4 border-b border-gray-200">
-                  <p className="font-semibold text-gray-900">{user?.firstName} {user?.lastName}</p>
+                  <p className="font-semibold text-gray-900 truncate">{user?.firstName} {user?.lastName}</p>
                   <p className="text-sm text-gray-500 truncate">{user?.email}</p>
                   <div className="flex items-center space-x-2 mt-2 text-xs text-gray-600">
                     <span>Height: {user?.height}cm</span>
@@ -298,8 +347,6 @@ const Header = ({ onMenuClick }) => {
                   </div>
                 </div>
                 <div className="p-2">
-                 
-                  
                   <button 
                     onClick={logout}
                     className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-md transition-colors"
