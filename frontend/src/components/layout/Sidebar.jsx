@@ -35,9 +35,9 @@ const Sidebar = ({ onMobileClose }) => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-white sidebar-z-index">
+    <div className="flex flex-col h-full bg-white w-64">
       {/* Logo and Close Button */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+      <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 bg-white">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
             <BarChart3 size={20} className="text-white" />
@@ -47,8 +47,7 @@ const Sidebar = ({ onMobileClose }) => {
         {onMobileClose && (
           <button 
             onClick={onMobileClose}
-            className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors mobile-touch-target"
-            aria-label="Close menu"
+            className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors lg:hidden"
           >
             <X size={20} />
           </button>
@@ -56,19 +55,17 @@ const Sidebar = ({ onMobileClose }) => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto sidebar-content">
+      <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto bg-white">
         {menuItems.map((item) => {
           const Icon = item.icon;
-          const active = isActive(item.path);
-          
           return (
             <Link
               key={item.path}
               to={item.path}
               onClick={handleLinkClick}
-              className={`sidebar-nav-item flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
-                active
-                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-500 active'
+              className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
+                isActive(item.path)
+                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-500'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
             >
@@ -80,7 +77,7 @@ const Sidebar = ({ onMobileClose }) => {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-200 bg-white">
         <div className="flex items-center space-x-3 px-3 py-2 text-gray-600">
           <User size={20} />
           <div>
