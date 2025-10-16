@@ -256,8 +256,8 @@ const WorkoutChart = ({ data, loading = false }) => {
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
                 { key: 'both', label: 'Both' },
-                { key: 'calories', label: 'Calories' },
-                { key: 'duration', label: 'Duration' }
+                { key: 'calories', label: 'Cal' },
+                { key: 'duration', label: 'Dur' }
               ].map((metric) => (
                 <button
                   key={metric.key}
