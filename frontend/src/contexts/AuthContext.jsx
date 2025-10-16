@@ -50,12 +50,14 @@ export const AuthProvider = ({ children }) => {
 
   const verifyToken = async () => {
     try {
-      const response = await authAPI.getProfile(state.token);
+      const response = await authAPI.getProfile();
+      // FIXED: Access data from response.data
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: { user: response.data.user, token: state.token }
       });
     } catch (error) {
+      console.error('Token verification failed:', error);
       localStorage.removeItem('token');
       dispatch({ type: 'LOGOUT' });
     }
@@ -65,6 +67,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     try {
       const response = await authAPI.login({ email, password });
+      // FIXED: Access data from response.data
       const { user, token } = response.data;
       
       localStorage.setItem('token', token);
@@ -75,6 +78,7 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
+      console.error('Login error:', error);
       const errorMessage = error.response?.data?.message || 'Login failed';
       dispatch({ type: 'LOGIN_FAILURE', payload: errorMessage });
       return { success: false, error: errorMessage };
@@ -87,6 +91,7 @@ export const AuthProvider = ({ children }) => {
       console.log('Registration data received:', userData);
       
       const response = await authAPI.register(userData);
+      // FIXED: Access data from response.data
       const { user, token } = response.data;
       
       localStorage.setItem('token', token);
@@ -97,8 +102,8 @@ export const AuthProvider = ({ children }) => {
       
       return { success: true };
     } catch (error) {
+      console.error('Registration error:', error);
       const errorMessage = error.response?.data?.message || 'Registration failed';
-      console.error('Registration error:', errorMessage);
       dispatch({ type: 'REGISTER_FAILURE', payload: errorMessage });
       return { success: false, error: errorMessage };
     }
@@ -111,10 +116,12 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (profileData) => {
     try {
-      const response = await authAPI.updateProfile(profileData, state.token);
+      const response = await authAPI.updateProfile(profileData);
+      // FIXED: Access data from response.data
       dispatch({ type: 'UPDATE_USER', payload: response.data.user });
       return { success: true };
     } catch (error) {
+      console.error('Profile update error:', error);
       const errorMessage = error.response?.data?.message || 'Profile update failed';
       return { success: false, error: errorMessage };
     }

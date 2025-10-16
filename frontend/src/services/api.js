@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 // Request interceptor to add auth token
@@ -24,13 +25,11 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// Response interceptor - FIXED: Return full response for all endpoints
 api.interceptors.response.use(
   (response) => {
-    if (response.config.url.includes('/auth/')) {
-      return response;
-    }
-    return response.data;
+    // Return the full response object for all endpoints
+    return response;
   },
   (error) => {
     if (error.response?.status === 401) {
