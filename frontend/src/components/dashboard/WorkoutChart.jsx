@@ -26,10 +26,9 @@ ChartJS.register(
 );
 
 const WorkoutChart = ({ data, loading = false }) => {
-  const [timeRange, setTimeRange] = useState('7d'); // 7d, 14d, 30d
-  const [selectedMetric, setSelectedMetric] = useState('both'); // calories, duration, both
+  const [timeRange, setTimeRange] = useState('7d');
+  const [selectedMetric, setSelectedMetric] = useState('both');
 
-  // Memoized chart data calculation
   const { chartData, chartOptions, isEmpty } = useMemo(() => {
     const entries = data?.entries || [];
     
@@ -107,8 +106,8 @@ const WorkoutChart = ({ data, loading = false }) => {
       labels: dailyData.map(day => {
         const date = new Date(day.date);
         return window.innerWidth < 640 
-          ? format(date, 'd') // Day only on mobile
-          : format(date, 'MMM d'); // Month + day on desktop
+          ? format(date, 'd')
+          : format(date, 'MMM d');
       }),
       datasets,
     };
@@ -234,65 +233,77 @@ const WorkoutChart = ({ data, loading = false }) => {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/60 hover:shadow-lg transition-all duration-300">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-red-50 rounded-lg">
+      {/* Header - Fixed Layout */}
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4 sm:mb-6 gap-4">
+        {/* Title Section */}
+        <div className="flex items-start gap-3 flex-shrink-0">
+          <div className="p-2 bg-red-50 rounded-lg flex-shrink-0">
             <Activity size={20} className="text-red-600" />
           </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-lg">Workout Activity</h3>
-            <p className="text-sm text-gray-500">Track your exercise performance</p>
+          <div className="min-w-0">
+            <h3 className="font-semibold text-gray-900 text-lg leading-tight">Workout Activity</h3>
+            <p className="text-sm text-gray-500 mt-1 leading-tight">Track your exercise performance</p>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2">
+        {/* Controls Section - Improved Desktop Layout */}
+        <div className="flex flex-col sm:flex-row gap-3 flex-1 lg:justify-end lg:max-w-md">
           {/* Metric Selector */}
-          <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1 w-fit">
-            {[
-              { key: 'both', label: 'Both' },
-              { key: 'calories', label: 'Calories' },
-              { key: 'duration', label: 'Duration' }
-            ].map((metric) => (
-              <button
-                key={metric.key}
-                onClick={() => setSelectedMetric(metric.key)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
-                  selectedMetric === metric.key
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                {metric.label}
-              </button>
-            ))}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <label className="text-xs font-medium text-gray-700 whitespace-nowrap sm:mr-2">
+              Show:
+            </label>
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+              {[
+                { key: 'both', label: 'Both' },
+                { key: 'calories', label: 'Calories' },
+                { key: 'duration', label: 'Duration' }
+              ].map((metric) => (
+                <button
+                  key={metric.key}
+                  onClick={() => setSelectedMetric(metric.key)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
+                    selectedMetric === metric.key
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {metric.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1 w-fit">
-            {[
-              { key: '7d', label: '7D' },
-              { key: '14d', label: '14D' },
-              { key: '30d', label: '30D' }
-            ].map((range) => (
-              <button
-                key={range.key}
-                onClick={() => setTimeRange(range.key)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
-                  timeRange === range.key
-                    ? 'bg-white text-gray-900 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                {range.label}
-              </button>
-            ))}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <label className="text-xs font-medium text-gray-700 whitespace-nowrap sm:mr-2">
+              Period:
+            </label>
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+              {[
+                { key: '7d', label: '7D' },
+                { key: '14d', label: '14D' },
+                { key: '30d', label: '30D' }
+              ].map((range) => (
+                <button
+                  key={range.key}
+                  onClick={() => setTimeRange(range.key)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
+                    timeRange === range.key
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {range.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Chart Container */}
-      <div className="relative h-64 sm:h-80 lg:h-96">
+      <div className="relative h-64 sm:h-72 lg:h-80 xl:h-96">
         {isEmpty ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
             <TrendingUp size={48} className="text-gray-300 mb-4" />
@@ -309,15 +320,15 @@ const WorkoutChart = ({ data, loading = false }) => {
         )}
       </div>
 
-      {/* Mobile Optimization Indicator */}
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+      {/* Footer */}
+      <div className="flex flex-col sm:flex-row items-center justify-between mt-4 pt-4 border-t border-gray-200 gap-2">
+        <div className="flex items-center gap-2 text-xs text-gray-500 order-2 sm:order-1">
           <Smartphone size={14} className="sm:hidden" />
           <Monitor size={14} className="hidden sm:block" />
           <span className="hidden sm:inline">Hover for details</span>
           <span className="sm:hidden">Tap points for details</span>
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-gray-500 order-1 sm:order-2">
           Updated {format(new Date(), 'MMM d, yyyy')}
         </div>
       </div>
