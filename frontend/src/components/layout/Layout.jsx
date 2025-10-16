@@ -6,7 +6,7 @@ const Layout = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Detect mobile device width
+  // ✅ Detect screen width (mobile < 1024px)
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
@@ -14,11 +14,11 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Toggle and close mobile sidebar
+  // ✅ Toggle / close mobile menu
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  // Close sidebar automatically when switching to desktop view
+  // ✅ Close menu when switching to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) setIsMobileMenuOpen(false);
@@ -28,13 +28,13 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="relative flex h-screen bg-gray-50 overflow-x-hidden">
-      {/* Sidebar for desktop */}
+    <div className="relative flex h-screen bg-gray-50 no-horizontal-scroll">
+      {/* ✅ Sidebar for desktop */}
       <div className="hidden lg:flex lg:flex-shrink-0">
         <Sidebar onClose={closeMobileMenu} />
       </div>
 
-      {/* Overlay (mobile only) */}
+      {/* ✅ Overlay for mobile (click to close) */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-300"
@@ -42,16 +42,16 @@ const Layout = ({ children }) => {
         ></div>
       )}
 
-      {/* Mobile Sidebar */}
+      {/* ✅ Mobile sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-[60] w-64 sm:w-72 transform transition-transform duration-300 ease-in-out lg:hidden will-change-transform ${
+        className={`fixed inset-y-0 left-0 z-[60] w-64 sm:w-72 transform transition-transform duration-300 ease-in-out bg-white shadow-2xl lg:hidden will-change-transform ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <Sidebar onClose={closeMobileMenu} />
       </div>
 
-      {/* Main content area */}
+      {/* ✅ Main content area */}
       <div className="flex-1 flex flex-col min-w-0 lg:ml-0 relative z-0">
         <Header onMenuClick={toggleMobileMenu} />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
@@ -63,3 +63,4 @@ const Layout = ({ children }) => {
 };
 
 export default Layout;
+
