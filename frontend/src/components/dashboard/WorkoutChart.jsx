@@ -256,8 +256,8 @@ const WorkoutChart = ({ data, loading = false }) => {
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
                 { key: 'both', label: 'Both' },
-                { key: 'calories', label: 'Cal' },
-                { key: 'duration', label: 'Dur' }
+                { key: 'calories', label: 'Cal.' },
+                { key: 'duration', label: 'Dur.' }
               ].map((metric) => (
                 <button
                   key={metric.key}
@@ -277,7 +277,7 @@ const WorkoutChart = ({ data, loading = false }) => {
           {/* Time Range Selector */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <label className="text-xs font-medium text-gray-700 whitespace-nowrap sm:mr-2">
-              Period:
+              
             </label>
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
