@@ -316,20 +316,15 @@ const WorkoutStats = ({ stats, entries, weeklyStats, loading = false }) => {
         </div>
       </div>
 
-      {/* Summary Footer */}
+      {/* Summary Footer - Removed the button */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 sm:p-6 border border-blue-200/60">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h4 className="font-semibold text-gray-900 text-sm sm:text-base">
-              Workout Summary
-            </h4>
-            <p className="text-gray-600 text-sm mt-1">
-              {additionalStats.workoutCount || 0} workouts completed • {additionalStats.totalDuration || 0} total minutes
-            </p>
-          </div>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-medium hover:bg-blue-700 transition-colors whitespace-nowrap">
-            View Detailed Report
-          </button>
+        <div className="text-center">
+          <h4 className="font-semibold text-gray-900 text-sm sm:text-base mb-2">
+            Workout Summary
+          </h4>
+          <p className="text-gray-600 text-sm">
+            {additionalStats.workoutCount || 0} workouts completed • {additionalStats.totalDuration || 0} total minutes • {additionalStats.totalCalories?.toLocaleString() || 0} calories burned
+          </p>
         </div>
       </div>
     </div>

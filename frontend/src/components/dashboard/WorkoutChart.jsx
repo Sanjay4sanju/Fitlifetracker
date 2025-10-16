@@ -176,6 +176,10 @@ const WorkoutChart = ({ data, loading = false }) => {
           type: 'linear',
           display: true,
           position: 'left',
+          title: {
+            display: selectedMetric === 'both',
+            text: 'Calories Burned',
+          },
           grid: {
             color: 'rgba(0, 0, 0, 0.05)',
           },
@@ -195,6 +199,10 @@ const WorkoutChart = ({ data, loading = false }) => {
           type: 'linear',
           display: selectedMetric === 'both',
           position: 'right',
+          title: {
+            display: true,
+            text: 'Duration (min)',
+          },
           grid: {
             drawOnChartArea: false,
           },
@@ -233,7 +241,7 @@ const WorkoutChart = ({ data, loading = false }) => {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/60 hover:shadow-lg transition-all duration-300">
-      {/* Header - Fixed Layout */}
+      {/* Header - Improved Desktop Layout */}
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4 sm:mb-6 gap-4">
         {/* Title Section */}
         <div className="flex items-start gap-3 flex-shrink-0">
@@ -246,13 +254,13 @@ const WorkoutChart = ({ data, loading = false }) => {
           </div>
         </div>
 
-        {/* Controls Section - Improved Desktop Layout */}
-        <div className="flex flex-col sm:flex-row gap-3 flex-1 lg:justify-end lg:max-w-md">
+        {/* Controls Section - Better Desktop Layout */}
+        <div className="flex flex-col sm:flex-row gap-3 flex-1 lg:justify-end lg:max-w-xl">
           {/* Metric Selector */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-            <label className="text-xs font-medium text-gray-700 whitespace-nowrap sm:mr-2">
-              Show:
-            </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-gray-700 whitespace-nowrap hidden sm:block">
+              Metrics:
+            </span>
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
                 { key: 'both', label: 'Both' },
@@ -275,10 +283,10 @@ const WorkoutChart = ({ data, loading = false }) => {
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-            <label className="text-xs font-medium text-gray-700 whitespace-nowrap sm:mr-2">
-              Period:
-            </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-gray-700 whitespace-nowrap hidden sm:block">
+              Range:
+            </span>
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
                 { key: '7d', label: '7D' },
