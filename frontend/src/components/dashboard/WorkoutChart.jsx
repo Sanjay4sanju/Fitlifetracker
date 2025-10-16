@@ -251,7 +251,7 @@ const WorkoutChart = ({ data, loading = false }) => {
           {/* Metric Selector */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
             <label className="text-xs font-medium text-gray-700 whitespace-nowrap sm:mr-2">
-              Show:
+            
             </label>
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
