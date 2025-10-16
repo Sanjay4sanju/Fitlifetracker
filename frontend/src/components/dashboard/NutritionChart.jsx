@@ -10,7 +10,7 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { format, subDays } from 'date-fns';
-import { TrendingUp, Calendar, Smartphone, Monitor } from 'lucide-react';
+import { TrendingUp, Calendar, Smartphone, Monitor, Utensils } from 'lucide-react';
 
 ChartJS.register(
   CategoryScale,
@@ -117,7 +117,7 @@ const NutritionChart = ({ data, loading = false }) => {
           },
         },
         title: {
-          display: false, // We'll handle title in our component
+          display: false,
         },
         tooltip: {
           backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -200,42 +200,48 @@ const NutritionChart = ({ data, loading = false }) => {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/60 hover:shadow-lg transition-all duration-300">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-50 rounded-lg">
-            <TrendingUp size={20} className="text-blue-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-lg">Nutrition Overview</h3>
-            <p className="text-sm text-gray-500">Track your daily nutrition intake</p>
+      {/* Header - Same structure as WorkoutChart */}
+      <div className="flex flex-col gap-4 mb-4 sm:mb-6">
+        {/* Title Section */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-50 rounded-lg">
+              <Utensils size={20} className="text-blue-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 text-lg">Nutrition Overview</h3>
+              <p className="text-sm text-gray-500">Track your daily nutrition intake</p>
+            </div>
           </div>
         </div>
 
-        {/* Time Range Selector */}
-        <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-1 w-fit">
-          {[
-            { key: '7d', label: '7D' },
-            { key: '14d', label: '14D' },
-            { key: '30d', label: '30D' }
-          ].map((range) => (
-            <button
-              key={range.key}
-              onClick={() => setTimeRange(range.key)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
-                timeRange === range.key
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              {range.label}
-            </button>
-          ))}
+        {/* Time Range Selector - Same height structure */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          <span className="text-sm font-medium text-gray-700 min-w-[80px]">Range:</span>
+          <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+            {[
+              { key: '7d', label: '7D' },
+              { key: '14d', label: '14D' },
+              { key: '30d', label: '30D' }
+            ].map((range) => (
+              <button
+                key={range.key}
+                onClick={() => setTimeRange(range.key)}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
+                  timeRange === range.key
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {range.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Chart Container */}
-      <div className="relative h-64 sm:h-80 lg:h-96">
+      {/* Chart Container - Same height as WorkoutChart */}
+      <div className="relative h-64 sm:h-72 lg:h-80 xl:h-96">
         {isEmpty ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
             <Calendar size={48} className="text-gray-300 mb-4" />
@@ -252,7 +258,7 @@ const NutritionChart = ({ data, loading = false }) => {
         )}
       </div>
 
-      {/* Mobile Optimization Indicator */}
+      {/* Footer - Same as WorkoutChart */}
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Smartphone size={14} className="sm:hidden" />
