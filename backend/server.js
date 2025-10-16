@@ -3,7 +3,7 @@ import app from './src/app.js';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 
 // Database Connection and Server Start
 const startServer = async () => {
@@ -37,8 +37,14 @@ const startServer = async () => {
       console.log(`🔗 API URL: http://localhost:${PORT}/api`);
       console.log(`❤️ Health Check: http://localhost:${PORT}/health`);
       console.log(`🔐 Register: http://localhost:${PORT}/api/auth/register`);
-      console.log(`🔐 Direct Test: http://localhost:${PORT}/api/direct-register`);
+      console.log(`🔐 Direct Test: http://localhost:${PORT}/api/direct-test`);
       console.log('✅ Routes mounted: /api/auth, /api/users, /api/nutrition, /api/workouts, etc.');
+      console.log('🌐 CORS Enabled for:');
+      console.log('   - fitlifetracke-r-b2cd.vercel.app');
+      console.log('   - fitlifetracke-r-b2cd-git-main-john-devs-projects-dc2575c3.vercel.app');
+      console.log('   - fitlifetracke-r-b2cd-onewioyrw-john-devs-projects-dc2575c3.vercel.app');
+      console.log('   - All Vercel domains (.vercel.app)');
+      console.log('   - Localhost:3000 and :5173');
       
       if (process.env.NODE_ENV === 'production') {
         console.log('🔒 Production mode: Database auto-sync disabled for safety');
