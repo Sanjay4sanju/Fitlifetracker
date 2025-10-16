@@ -186,9 +186,9 @@ const NutritionChart = ({ data, loading = false }) => {
 
   if (loading) {
     return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/60 h-[420px] animate-pulse">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/60 h-[460px] animate-pulse">
         <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
-        <div className="h-64 bg-gray-200 rounded mb-4"></div>
+        <div className="h-80 bg-gray-200 rounded mb-4"></div>
         <div className="flex gap-2">
           <div className="h-8 bg-gray-200 rounded flex-1"></div>
           <div className="h-8 bg-gray-200 rounded flex-1"></div>
@@ -240,8 +240,8 @@ const NutritionChart = ({ data, loading = false }) => {
         </div>
       </div>
 
-      {/* Chart Container - Increased height to match WorkoutChart */}
-      <div className="relative h-72 sm:h-80 lg:h-96 xl:h-[420px]">
+      {/* Chart Container - Increased height even more */}
+      <div className="relative h-80 sm:h-96 lg:h-[420px] xl:h-[460px]">
         {isEmpty ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
             <Calendar size={48} className="text-gray-300 mb-4" />
