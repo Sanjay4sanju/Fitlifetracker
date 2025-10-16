@@ -241,7 +241,7 @@ const NutritionChart = ({ data, loading = false }) => {
       </div>
 
       {/* Chart Container - Increased height even more */}
-      <div className="relative h-64 sm:h-90 lg:h-[420px] xl:h-[460px]">
+      <div className="relative h-60 sm:h-86 lg:h-[420px] xl:h-[460px]">
         {isEmpty ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
             <Calendar size={48} className="text-gray-300 mb-4" />
