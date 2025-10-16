@@ -164,3 +164,17 @@ body {
 .input-responsive {
   @apply w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base;
 }
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.25s ease-out;
+}
