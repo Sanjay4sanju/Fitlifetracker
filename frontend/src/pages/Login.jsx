@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
-import { BarChart3, Eye, EyeOff } from 'lucide-react';
+import { BarChart3, Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 
@@ -24,94 +24,135 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-4 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-6 sm:space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="flex justify-center">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
-              <BarChart3 size={20} className="text-white sm:w-6 sm:h-6" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 py-4 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        {/* Modern Card Container */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+          <div className="p-6 sm:p-8 lg:p-10">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <BarChart3 size={28} className="text-white" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                Welcome Back
+              </h2>
+              <p className="text-gray-600 mt-2 text-sm sm:text-base">
+                Sign in to continue your fitness journey
+              </p>
             </div>
-          </div>
-          <h2 className="mt-4 sm:mt-6 text-2xl sm:text-3xl font-bold text-gray-900">
-            Sign in to your account
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Or{' '}
-            <Link
-              to="/register"
-              className="font-medium text-primary-600 hover:text-primary-500"
-            >
-              create a new account
-            </Link>
-          </p>
-        </div>
 
-        {/* Form */}
-        <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit(onSubmit)}>
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
-              <p className="text-sm text-red-600">{error}</p>
-            </div>
-          )}
+            {/* Form */}
+            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                  <p className="text-sm text-red-600 text-center">{error}</p>
+                </div>
+              )}
 
-          <Input
-            label="Email address"
-            type="email"
-            error={errors.email?.message}
-            {...register('email', {
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address'
-              }
-            })}
-          />
-
-          <div className="relative">
-            <Input
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              error={errors.password?.message}
-              {...register('password', {
-                required: 'Password is required',
-                minLength: {
-                  value: 6,
-                  message: 'Password must be at least 6 characters'
-                }
-              })}
-            />
-            <button
-              type="button"
-              className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
-                onChange={() => setShowPassword(!showPassword)}
+              <Input
+                label="Email address"
+                type="email"
+                placeholder="Enter your email"
+                error={errors.email?.message}
+                icon={<Mail size={18} />}
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Invalid email address'
+                  }
+                })}
               />
-              <label className="ml-2 block text-sm text-gray-900">
-                Show password
-              </label>
+
+              <div className="relative">
+                <Input
+                  label="Password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
+                  error={errors.password?.message}
+                  icon={<Lock size={18} />}
+                  {...register('password', {
+                    required: 'Password is required',
+                    minLength: {
+                      value: 6,
+                      message: 'Password must be at least 6 characters'
+                    }
+                  })}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    onChange={() => setShowPassword(!showPassword)}
+                  />
+                  <label className="ml-2 block text-sm text-gray-900">
+                    Show password
+                  </label>
+                </div>
+                
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-primary-600 hover:text-primary-500 font-medium transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                loading={loading}
+                className="w-full bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 shadow-lg shadow-primary-500/25"
+                size="large"
+              >
+                {loading ? (
+                  'Signing in...'
+                ) : (
+                  <span className="flex items-center justify-center">
+                    Sign In
+                    <ArrowRight size={18} className="ml-2" />
+                  </span>
+                )}
+              </Button>
+
+              <div className="text-center">
+                <p className="text-sm text-gray-600">
+                  Don't have an account?{' '}
+                  <Link
+                    to="/register"
+                    className="font-semibold text-primary-600 hover:text-primary-500 transition-colors"
+                  >
+                    Create one now
+                  </Link>
+                </p>
+              </div>
+            </form>
+
+            {/* Additional Features */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="text-center">
+                <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-3">
+                  Start Your Fitness Journey
+                </p>
+                <div className="grid grid-cols-3 gap-2 text-xs text-gray-600">
+                  <div className="bg-gray-50 rounded-lg p-2">Track Progress</div>
+                  <div className="bg-gray-50 rounded-lg p-2">Set Goals</div>
+                  <div className="bg-gray-50 rounded-lg p-2">Get Insights</div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <Button
-            type="submit"
-            loading={loading}
-            className="w-full"
-            size="large"
-          >
-            Sign in
-          </Button>
-        </form>
+        </div>
       </div>
     </div>
   );

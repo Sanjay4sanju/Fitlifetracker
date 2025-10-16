@@ -6,6 +6,7 @@ const Input = React.forwardRef(({
   error, 
   className = '',
   size = 'medium',
+  icon,
   ...props 
 }, ref) => {
   const sizes = {
@@ -14,12 +15,13 @@ const Input = React.forwardRef(({
     large: 'px-4 py-4 text-lg'
   };
 
-  const baseClasses = 'w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white placeholder-gray-400';
+  const baseClasses = 'w-full border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white placeholder-gray-400 shadow-sm';
   
   const classes = clsx(
     baseClasses,
     sizes[size],
     error && 'border-red-500 focus:ring-red-500',
+    icon && 'pl-10',
     className
   );
 
@@ -30,11 +32,18 @@ const Input = React.forwardRef(({
           {label}
         </label>
       )}
-      <input
-        ref={ref}
-        className={classes}
-        {...props}
-      />
+      <div className="relative">
+        {icon && (
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            {icon}
+          </div>
+        )}
+        <input
+          ref={ref}
+          className={classes}
+          {...props}
+        />
+      </div>
       {error && (
         <p className="text-red-600 text-xs mt-1">{error}</p>
       )}
