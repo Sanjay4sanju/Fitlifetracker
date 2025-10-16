@@ -281,9 +281,9 @@ const WorkoutChart = ({ data, loading = false }) => {
             </label>
             <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
-                { key: '7d', label: '7D' },
-                { key: '14d', label: '14D' },
-                { key: '30d', label: '30D' }
+                { key: '7d', label: '' },
+                { key: '14d', label: '' },
+                { key: '30d', label: '' }
               ].map((range) => (
                 <button
                   key={range.key}
