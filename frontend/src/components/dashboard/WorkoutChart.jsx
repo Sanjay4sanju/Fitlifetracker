@@ -241,23 +241,27 @@ const WorkoutChart = ({ data, loading = false }) => {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/60 hover:shadow-lg transition-all duration-300">
-      {/* Header - Same structure as NutritionChart */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-red-50 rounded-lg">
-            <Activity size={20} className="text-red-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-lg">Workout Activity</h3>
-            <p className="text-sm text-gray-500">Track your exercise performance</p>
+      {/* Header - Stacked Controls like Mobile */}
+      <div className="flex flex-col gap-4 mb-4 sm:mb-6">
+        {/* Title Section */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-red-50 rounded-lg">
+              <Activity size={20} className="text-red-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 text-lg">Workout Activity</h3>
+              <p className="text-sm text-gray-500">Track your exercise performance</p>
+            </div>
           </div>
         </div>
 
-        {/* Controls Section - Compact and aligned with NutritionChart */}
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+        {/* Controls Section - Stacked Vertically */}
+        <div className="flex flex-col gap-3">
           {/* Metric Selector */}
-          <div className="flex items-center gap-2">
-            <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <span className="text-sm font-medium text-gray-700 min-w-[80px]">Metrics:</span>
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
                 { key: 'both', label: 'Both' },
                 { key: 'calories', label: 'Calories' },
@@ -266,7 +270,7 @@ const WorkoutChart = ({ data, loading = false }) => {
                 <button
                   key={metric.key}
                   onClick={() => setSelectedMetric(metric.key)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
                     selectedMetric === metric.key
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -279,8 +283,9 @@ const WorkoutChart = ({ data, loading = false }) => {
           </div>
 
           {/* Time Range Selector */}
-          <div className="flex items-center gap-2">
-            <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <span className="text-sm font-medium text-gray-700 min-w-[80px]">Range:</span>
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
               {[
                 { key: '7d', label: '7D' },
                 { key: '14d', label: '14D' },
@@ -289,7 +294,7 @@ const WorkoutChart = ({ data, loading = false }) => {
                 <button
                   key={range.key}
                   onClick={() => setTimeRange(range.key)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
                     timeRange === range.key
                       ? 'bg-white text-gray-900 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900'
@@ -303,8 +308,8 @@ const WorkoutChart = ({ data, loading = false }) => {
         </div>
       </div>
 
-      {/* Chart Container - Same height as NutritionChart */}
-      <div className="relative h-64 sm:h-80 lg:h-96">
+      {/* Chart Container */}
+      <div className="relative h-64 sm:h-72 lg:h-80 xl:h-96">
         {isEmpty ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
             <TrendingUp size={48} className="text-gray-300 mb-4" />
@@ -321,13 +326,13 @@ const WorkoutChart = ({ data, loading = false }) => {
         )}
       </div>
 
-      {/* Footer - Same as NutritionChart */}
+      {/* Footer */}
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Smartphone size={14} className="sm:hidden" />
           <Monitor size={14} className="hidden sm:block" />
           <span className="hidden sm:inline">Hover for details</span>
-          <span className="sm:hidden">Tap points for details</span>
+          <span className="sm:hidden">Tap for details</span>
         </div>
         <div className="text-xs text-gray-500">
           Updated {format(new Date(), 'MMM d, yyyy')}
