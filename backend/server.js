@@ -40,6 +40,9 @@ const startServer = async () => {
       console.log(`🔐 Direct Test: http://localhost:${PORT}/api/direct-test`);
       console.log('✅ Routes mounted: /api/auth, /api/users, /api/nutrition, /api/workouts, etc.');
       console.log('🌐 CORS Enabled for:');
+      console.log('   - fitlifetracker-v1.vercel.app');
+      console.log('   - fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app');
+      console.log('   - fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app');
       console.log('   - fit-lifetracker2.vercel.app');
       console.log('   - fit-lifetracker2-git-main-john-devs-projects-dc2575c3.vercel.app');
       console.log('   - fit-lifetracker2-ia797omnc-john-devs-projects-dc2575c3.vercel.app');

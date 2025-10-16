@@ -35,7 +35,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// CORS Configuration - UPDATED WITH ALL NEW DOMAINS
+// CORS Configuration - UPDATED WITH ALL DOMAINS
 const corsOptions = {
   origin: function (origin, callback) {
     console.log('🔄 CORS checking origin:', origin);
@@ -50,6 +50,9 @@ const corsOptions = {
     const allowedDomains = [
       'localhost:3000',
       'localhost:5173',
+      'fitlifetracker-v1.vercel.app',
+      'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
+      'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2.vercel.app',
       'fit-lifetracker2-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2-ia797omnc-john-devs-projects-dc2575c3.vercel.app',
@@ -133,6 +136,9 @@ app.get('/api/direct-test', (req, res) => {
     cors: 'CORS should be working now',
     timestamp: new Date().toISOString(),
     allowedDomains: [
+      'fitlifetracker-v1.vercel.app',
+      'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
+      'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2.vercel.app',
       'fit-lifetracker2-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2-ia797omnc-john-devs-projects-dc2575c3.vercel.app',
@@ -153,6 +159,9 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV,
     cors: 'Enabled for all Vercel domains',
     allowedDomains: [
+      'fitlifetracker-v1.vercel.app',
+      'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
+      'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2.vercel.app',
       'fit-lifetracker2-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2-ia797omnc-john-devs-projects-dc2575c3.vercel.app',
@@ -169,6 +178,9 @@ app.get('/api', (req, res) => {
     environment: process.env.NODE_ENV,
     cors: 'Enabled for Vercel deployments',
     allowedOrigins: [
+      'fitlifetracker-v1.vercel.app',
+      'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
+      'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2.vercel.app',
       'fit-lifetracker2-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fit-lifetracker2-ia797omnc-john-devs-projects-dc2575c3.vercel.app',
@@ -178,7 +190,7 @@ app.get('/api', (req, res) => {
       'localhost:3000',
       'localhost:5173'
     ],
-    documentation: 'https://github.com/johnchire827/FitLifetracker2',
+    documentation: 'https://github.com/johnchire827/FitlifetrackerV1',
     endpoints: {
       auth: '/api/auth',
       users: '/api/users',
@@ -227,6 +239,9 @@ app.use((err, req, res, next) => {
       success: false,
       details: 'Your origin is not in the allowed list',
       allowedOrigins: [
+        'fitlifetracker-v1.vercel.app',
+        'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
+        'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
         'fit-lifetracker2.vercel.app',
         'fit-lifetracker2-git-main-john-devs-projects-dc2575c3.vercel.app',
         'fit-lifetracker2-ia797omnc-john-devs-projects-dc2575c3.vercel.app',
