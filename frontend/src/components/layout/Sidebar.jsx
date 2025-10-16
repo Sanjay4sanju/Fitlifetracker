@@ -7,11 +7,10 @@ import {
   TrendingUp, 
   BarChart3,
   Settings,
-  User,
-  X
+  User
 } from 'lucide-react';
 
-const Sidebar = ({ onMobileClose }) => {
+const Sidebar = () => {
   const location = useLocation();
 
   const menuItems = [
@@ -28,30 +27,16 @@ const Sidebar = ({ onMobileClose }) => {
     return false;
   };
 
-  const handleLinkClick = () => {
-    if (onMobileClose) {
-      onMobileClose();
-    }
-  };
-
   return (
-    <div className="flex flex-col h-full bg-white w-64">
-      {/* Logo and Close Button */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 bg-white">
+    <div className="flex flex-col h-full bg-white w-64 border-r border-gray-200">
+      {/* Logo */}
+      <div className="flex items-center h-16 px-4 border-b border-gray-200 bg-white">
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
             <BarChart3 size={20} className="text-white" />
           </div>
           <span className="text-xl font-bold text-gray-900">FitLifeTracker</span>
         </div>
-        {onMobileClose && (
-          <button 
-            onClick={onMobileClose}
-            className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors lg:hidden"
-          >
-            <X size={20} />
-          </button>
-        )}
       </div>
 
       {/* Navigation */}
@@ -62,7 +47,6 @@ const Sidebar = ({ onMobileClose }) => {
             <Link
               key={item.path}
               to={item.path}
-              onClick={handleLinkClick}
               className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
                 isActive(item.path)
                   ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-500'

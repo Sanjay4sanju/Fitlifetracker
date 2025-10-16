@@ -11,6 +11,12 @@ const Header = ({ onMenuClick }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Remove menu button functionality since sidebar is always visible
+  const handleMenuClick = () => {
+    // Menu button is now hidden/disabled since sidebar is always visible
+    console.log('Sidebar is always visible now');
+  };
+
   // Fetch data for notifications
   const { data: workoutData } = useQuery({
     queryKey: ['workouts-notifications'],
@@ -204,14 +210,16 @@ const Header = ({ onMenuClick }) => {
     <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4 safe-area-inset-top">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Mobile Menu Button */}
-          <button 
-            onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors mobile-touch-target"
-            aria-label="Open menu"
-          >
-            <Menu size={20} />
-          </button>
+          {/* Menu Button - HIDDEN since sidebar is always visible */}
+          <div className="lg:hidden opacity-50 cursor-not-allowed">
+            <button 
+              disabled
+              className="p-2 rounded-md text-gray-400 mobile-touch-target"
+              aria-label="Menu disabled - sidebar always visible"
+            >
+              <Menu size={20} />
+            </button>
+          </div>
           
           {/* Search Bar - Responsive */}
           <div className="search-container relative">
