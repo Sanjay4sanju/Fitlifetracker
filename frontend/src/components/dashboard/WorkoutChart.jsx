@@ -241,67 +241,68 @@ const WorkoutChart = ({ data, loading = false }) => {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200/60 hover:shadow-lg transition-all duration-300">
-      {/* Header - Compact Desktop Layout */}
-      <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between mb-4 sm:mb-6 gap-4">
+      {/* Header - Stacked Controls like Mobile */}
+      <div className="flex flex-col gap-4 mb-4 sm:mb-6">
         {/* Title Section */}
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-red-50 rounded-lg">
-            <Activity size={20} className="text-red-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-lg">Workout Activity</h3>
-            <p className="text-sm text-gray-500">Track your exercise performance</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-red-50 rounded-lg">
+              <Activity size={20} className="text-red-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 text-lg">Workout Activity</h3>
+              <p className="text-sm text-gray-500">Track your exercise performance</p>
+            </div>
           </div>
         </div>
 
-        {/* Controls Section - Compact and Clean */}
-        <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-          {/* Combined Controls Container */}
-          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-            {/* Metric Selector */}
-            <div className="flex items-center gap-2">
-              <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
-                {[
-                  { key: 'both', label: 'Both' },
-                  { key: 'calories', label: 'Calories' },
-                  { key: 'duration', label: 'Duration' }
-                ].map((metric) => (
-                  <button
-                    key={metric.key}
-                    onClick={() => setSelectedMetric(metric.key)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
-                      selectedMetric === metric.key
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    {metric.label}
-                  </button>
-                ))}
-              </div>
+        {/* Controls Section - Stacked Vertically */}
+        <div className="flex flex-col gap-3">
+          {/* Metric Selector */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <span className="text-sm font-medium text-gray-700 min-w-[80px]">Metrics:</span>
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+              {[
+                { key: 'both', label: 'Both' },
+                { key: 'calories', label: 'Calories' },
+                { key: 'duration', label: 'Duration' }
+              ].map((metric) => (
+                <button
+                  key={metric.key}
+                  onClick={() => setSelectedMetric(metric.key)}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
+                    selectedMetric === metric.key
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {metric.label}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Time Range Selector */}
-            <div className="flex items-center gap-2">
-              <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
-                {[
-                  { key: '7d', label: '7D' },
-                  { key: '14d', label: '14D' },
-                  { key: '30d', label: '30D' }
-                ].map((range) => (
-                  <button
-                    key={range.key}
-                    onClick={() => setTimeRange(range.key)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
-                      timeRange === range.key
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    {range.label}
-                  </button>
-                ))}
-              </div>
+          {/* Time Range Selector */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <span className="text-sm font-medium text-gray-700 min-w-[80px]">Range:</span>
+            <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
+              {[
+                { key: '7d', label: '7D' },
+                { key: '14d', label: '14D' },
+                { key: '30d', label: '30D' }
+              ].map((range) => (
+                <button
+                  key={range.key}
+                  onClick={() => setTimeRange(range.key)}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap ${
+                    timeRange === range.key
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {range.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -325,7 +326,7 @@ const WorkoutChart = ({ data, loading = false }) => {
         )}
       </div>
 
-      {/* Footer - Simplified */}
+      {/* Footer */}
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-200">
         <div className="flex items-center gap-2 text-xs text-gray-500">
           <Smartphone size={14} className="sm:hidden" />
