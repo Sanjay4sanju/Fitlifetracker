@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/useAuth';
+import { Eye, EyeOff } from 'lucide-react';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
 const RegisterForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { register: registerUser, loading, error } = useAuth();
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
@@ -14,7 +17,6 @@ const RegisterForm = () => {
       const response = await registerUser(data);
       if (response.success) {
         alert('Account created successfully!');
-        // Optionally redirect to login
       }
     } catch (err) {
       console.error('Registration error:', err);
@@ -24,14 +26,14 @@ const RegisterForm = () => {
   const password = watch('password', '');
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
           <p className="text-sm text-red-600">{error}</p>
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <Input
           label="First Name"
           {...register('firstName', { 
@@ -98,33 +100,51 @@ const RegisterForm = () => {
         error={errors.email?.message}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input
-          label="Password"
-          type="password"
-          {...register('password', {
-            required: 'Password is required',
-            minLength: { value: 6, message: 'Password must be at least 6 characters' },
-            pattern: {
-              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-              message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-            }
-          })}
-          error={errors.password?.message}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="relative">
+          <Input
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            {...register('password', {
+              required: 'Password is required',
+              minLength: { value: 6, message: 'Password must be at least 6 characters' },
+              pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+              }
+            })}
+            error={errors.password?.message}
+          />
+          <button
+            type="button"
+            className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
 
-        <Input
-          label="Confirm Password"
-          type="password"
-          {...register('confirmPassword', {
-            required: 'Confirm password is required',
-            validate: value => value === password || 'Passwords do not match',
-          })}
-          error={errors.confirmPassword?.message}
-        />
+        <div className="relative">
+          <Input
+            label="Confirm Password"
+            type={showConfirmPassword ? 'text' : 'password'}
+            {...register('confirmPassword', {
+              required: 'Confirm password is required',
+              validate: value => value === password || 'Passwords do not match',
+            })}
+            error={errors.confirmPassword?.message}
+          />
+          <button
+            type="button"
+            className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <Input
           label="Height (cm)"
           type="number"
@@ -150,12 +170,12 @@ const RegisterForm = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
           <select
             {...register('gender', { required: 'Gender is required' })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
@@ -175,12 +195,12 @@ const RegisterForm = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Fitness Goal</label>
           <select
             {...register('fitnessGoal', { required: 'Fitness Goal is required' })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >
             <option value="maintenance">Maintenance</option>
             <option value="weight_loss">Weight Loss</option>
@@ -196,7 +216,7 @@ const RegisterForm = () => {
           <label className="block text-sm font-medium text-gray-700 mb-1">Activity Level</label>
           <select
             {...register('activityLevel', { required: 'Activity Level is required' })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >
             <option value="moderate">Moderate</option>
             <option value="sedentary">Sedentary</option>

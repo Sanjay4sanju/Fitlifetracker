@@ -10,10 +10,9 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { register: registerUser, loading, error, clearError } = useAuth();
-  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm();
   const navigate = useNavigate();
 
-  // FIX: Simplify useEffect to run only once on component mount
   useEffect(() => {
     clearError();
     
@@ -26,7 +25,7 @@ const Register = () => {
     const defaultDate = new Date();
     defaultDate.setFullYear(defaultDate.getFullYear() - 18);
     setValue('dateOfBirth', defaultDate.toISOString().split('T')[0]);
-  }, []); // Empty dependency array - runs only once
+  }, []);
 
   const onSubmit = async (formData) => {
     console.log('Form submission data:', formData);
@@ -56,23 +55,17 @@ const Register = () => {
 
   const password = watch('password');
 
-  // Debug function to check form values
-  const checkFormValues = () => {
-    const values = watch();
-    console.log('Current form values:', values);
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-4 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8">
         {/* Header */}
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
-              <BarChart3 size={24} className="text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+              <BarChart3 size={20} className="text-white sm:w-6 sm:h-6" />
             </div>
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+          <h2 className="mt-4 sm:mt-6 text-2xl sm:text-3xl font-bold text-gray-900">
             Create your account
           </h2>
           <p className="mt-2 text-sm text-gray-600">
@@ -87,14 +80,14 @@ const Register = () => {
         </div>
 
         {/* Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+        <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit(onSubmit)}>
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
               <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Input
               label="First Name *"
               error={errors.firstName?.message}
@@ -151,10 +144,10 @@ const Register = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
@@ -170,14 +163,14 @@ const Register = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-8 text-gray-400 hover:text-gray-600"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
-              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <Input
               label="Height (cm) *"
               type="number"
@@ -208,14 +201,14 @@ const Register = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Gender *
               </label>
               <select
                 {...register('gender', { required: 'Gender is required' })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 <option value="">Select gender</option>
                 <option value="male">Male</option>
@@ -237,14 +230,14 @@ const Register = () => {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Fitness Goal *
               </label>
               <select
                 {...register('fitnessGoal', { required: 'Fitness goal is required' })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 <option value="weight_loss">Weight Loss</option>
                 <option value="muscle_gain">Muscle Gain</option>
@@ -262,7 +255,7 @@ const Register = () => {
               </label>
               <select
                 {...register('activityLevel', { required: 'Activity level is required' })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               >
                 <option value="sedentary">Sedentary</option>
                 <option value="light">Light</option>
@@ -275,9 +268,6 @@ const Register = () => {
               )}
             </div>
           </div>
-
-          {/* Debug button - remove in production */}
-        
 
           <Button
             type="submit"
