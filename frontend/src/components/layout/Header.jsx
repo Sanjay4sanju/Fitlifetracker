@@ -1,24 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, Search, User, Menu, ChevronDown } from 'lucide-react';
+import { Bell, Search, User, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
-const Header = ({ onMenuClick }) => {
+const Header = () => {
   const { user, logout } = useAuth();
-  const [isMobile, setIsMobile] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNavDropdownOpen, setIsNavDropdownOpen] = useState(false);
 
   const profileRef = useRef(null);
   const navRef = useRef(null);
-
-  // Detect mobile screen width
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -45,25 +36,12 @@ const Header = ({ onMenuClick }) => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-3 sm:py-4 relative z-50">
       <div className="flex items-center justify-between">
-        {/* Left Section */}
-        <div className="flex items-center space-x-3">
-          {/* Menu icon (mobile sidebar toggle) */}
-          {isMobile && (
-            <button
-              onClick={onMenuClick}
-              className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition"
-            >
-              <Menu size={22} />
-            </button>
-          )}
-
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
-              <User size={18} className="text-white" />
-            </div>
-            <span className="text-lg font-bold text-gray-800">FitLifeTracker</span>
+        {/* Left Section - Logo */}
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+            <User size={18} className="text-white" />
           </div>
+          <span className="text-lg font-bold text-gray-800">FitLifeTracker</span>
         </div>
 
         {/* Right Section */}
@@ -101,7 +79,7 @@ const Header = ({ onMenuClick }) => {
             <Bell size={20} />
           </button>
 
-          {/* Profile button */}
+          {/* Profile dropdown */}
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -118,7 +96,6 @@ const Header = ({ onMenuClick }) => {
               </div>
             </button>
 
-            {/* Profile dropdown */}
             {isProfileOpen && (
               <div className="absolute right-0 mt-2 w-48 sm:w-64 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
                 <div className="p-4 border-b border-gray-200">
