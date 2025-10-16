@@ -105,7 +105,7 @@ const Login = () => {
                   to="/forgot-password"
                   className="text-sm text-primary-600 hover:text-primary-500 font-medium transition-colors"
                 >
-                  Forgot password?
+                  
                 </Link>
               </div>
 

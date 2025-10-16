@@ -57,30 +57,30 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 py-4 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-6xl">
         {/* Modern Card Container */}
         <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            {/* Left Side - Branding */}
-            <div className="bg-gradient-to-br from-primary-600 to-primary-800 p-8 lg:p-12 text-white hidden lg:flex flex-col justify-center">
+          <div className="grid grid-cols-1 xl:grid-cols-3">
+            {/* Left Side - Branding (Compact) */}
+            <div className="bg-gradient-to-br from-primary-600 to-primary-800 p-6 lg:p-8 text-white hidden xl:flex flex-col justify-center">
               <div className="text-center">
-                <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <BarChart3 size={32} className="text-white" />
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 size={28} className="text-white" />
                 </div>
-                <h1 className="text-3xl font-bold mb-4">FitLife Tracker</h1>
-                <p className="text-primary-100 text-lg leading-relaxed">
-                  Start your fitness journey with us. Track your progress, achieve your goals, and transform your lifestyle.
+                <h1 className="text-2xl font-bold mb-3">FitLife Tracker</h1>
+                <p className="text-primary-100 text-sm leading-relaxed">
+                  Start your fitness journey with us. Track your progress and achieve your goals.
                 </p>
-                <div className="mt-8 flex justify-center">
-                  <div className="w-24 h-1 bg-white/30 rounded-full"></div>
+                <div className="mt-6 flex justify-center">
+                  <div className="w-16 h-1 bg-white/30 rounded-full"></div>
                 </div>
               </div>
             </div>
 
-            {/* Right Side - Form */}
-            <div className="p-6 sm:p-8 lg:p-12">
+            {/* Right Side - Form (More Space) */}
+            <div className="p-6 sm:p-8 lg:p-10 xl:col-span-2">
               {/* Mobile Header */}
-              <div className="lg:hidden text-center mb-8">
+              <div className="xl:hidden text-center mb-8">
                 <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <BarChart3 size={28} className="text-white" />
                 </div>
@@ -89,9 +89,9 @@ const Register = () => {
               </div>
 
               {/* Desktop Header */}
-              <div className="hidden lg:block mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Create Account</h2>
-                <p className="text-gray-600 mt-2">Join our fitness community</p>
+              <div className="hidden xl:block mb-8">
+                <h2 className="text-3xl font-bold text-gray-900">Create Your Account</h2>
+                <p className="text-gray-600 mt-2 text-lg">Start your fitness journey today</p>
               </div>
 
               <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -108,7 +108,7 @@ const Register = () => {
                     Personal Information
                   </h3>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                       label="First Name *"
                       error={errors.firstName?.message}
@@ -130,29 +130,31 @@ const Register = () => {
                     />
                   </div>
 
-                  <Input
-                    label="Username"
-                    placeholder="Optional - will use email if empty"
-                    error={errors.username?.message}
-                    icon={<User size={18} />}
-                    {...register('username', {
-                      minLength: { value: 3, message: 'Username must be at least 3 characters' }
-                    })}
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      label="Username"
+                      placeholder="Optional"
+                      error={errors.username?.message}
+                      icon={<User size={18} />}
+                      {...register('username', {
+                        minLength: { value: 3, message: 'Username must be at least 3 characters' }
+                      })}
+                    />
 
-                  <Input
-                    label="Email address *"
-                    type="email"
-                    error={errors.email?.message}
-                    icon={<Mail size={18} />}
-                    {...register('email', {
-                      required: 'Email is required',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Invalid email address'
-                      }
-                    })}
-                  />
+                    <Input
+                      label="Email address *"
+                      type="email"
+                      error={errors.email?.message}
+                      icon={<Mail size={18} />}
+                      {...register('email', {
+                        required: 'Email is required',
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                          message: 'Invalid email address'
+                        }
+                      })}
+                    />
+                  </div>
                 </div>
 
                 {/* Password Section */}
@@ -162,7 +164,7 @@ const Register = () => {
                     Security
                   </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="relative">
                       <Input
                         label="Password *"
@@ -215,7 +217,7 @@ const Register = () => {
                     Physical Stats
                   </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                       label="Height (cm) *"
                       type="number"
@@ -246,9 +248,7 @@ const Register = () => {
                         valueAsNumber: true
                       })}
                     />
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                         <User size={16} className="mr-2" />
@@ -287,7 +287,7 @@ const Register = () => {
                     Fitness Goals
                   </h3>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center">
                         <Target size={16} className="mr-2" />
