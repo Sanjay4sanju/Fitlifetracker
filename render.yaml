@@ -1,7 +1,7 @@
 # Render Blueprint configuration for Fitlifetracker backend
 services:
   - type: web
-    name: fitlifetracker-backend
+    name: fitlifetracker-1
     env: node
     plan: free
     region: ohio
