@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://fitlifetracker-1.onrender.com/api';
+
+console.log('🚀 API Base URL:', API_BASE_URL);
 
 // Create axios instance
 const api = axios.create({
@@ -8,44 +10,81 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000,
 });
 
-// Request interceptor to add auth token
+// Request interceptor to add auth token with logging
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+    console.log('🔄 API Request:', config.method?.toUpperCase(), config.url);
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('✅ Token added to request:', token.substring(0, 20) + '...');
+    } else {
+      console.log('❌ No token found in localStorage');
     }
+    
+    console.log('📤 Request headers:', config.headers);
     return config;
   },
   (error) => {
+    console.error('❌ Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor
+// Response interceptor with enhanced logging
 api.interceptors.response.use(
   (response) => {
+    console.log('✅ API Response success:', response.status, response.config.url);
+    console.log('📥 Response data:', response.data);
+    
+    // Return the full response for auth endpoints, just data for others
     if (response.config.url.includes('/auth/')) {
       return response;
     }
     return response.data;
   },
   (error) => {
+    console.error('❌ API Response error:', {
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+    
     if (error.response?.status === 401) {
+      console.log('🔐 401 Unauthorized - Removing token and redirecting');
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    } else if (error.response?.status === 403) {
+      console.log('🔐 403 Forbidden - Token may be invalid');
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
-    return Promise.reject(error);
+    
+    // Return the error response data if available
+    return Promise.reject(error.response?.data || error);
   }
 );
 
 // Auth API
 export const authAPI = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  register: (userData) => api.post('/auth/register', userData),
-  getProfile: () => api.get('/auth/profile'),
+  login: (credentials) => {
+    console.log('🔑 Login API call with:', credentials.email);
+    return api.post('/auth/login', credentials);
+  },
+  register: (userData) => {
+    console.log('👤 Register API call with:', userData.email);
+    return api.post('/auth/register', userData);
+  },
+  getProfile: () => {
+    console.log('📋 Get profile API call');
+    return api.get('/auth/profile');
+  },
   updateProfile: (profileData) => api.put('/auth/profile', profileData),
   refreshToken: (refreshToken) => api.post('/auth/refresh-token', { refreshToken })
 };
@@ -59,17 +98,12 @@ export const userAPI = {
   deleteAccount: (data) => api.delete('/users/account', { data })
 };
 
-// Notification API
-export const notificationAPI = {
-  getNotifications: () => api.get('/notifications'),
-  markAsRead: (id) => api.put(`/notifications/${id}/read`),
-  markAllAsRead: () => api.put('/notifications/read-all'),
-  deleteNotification: (id) => api.delete(`/notifications/${id}`)
-};
-
 // Nutrition API
 export const nutritionAPI = {
-  getEntries: (params) => api.get('/nutrition', { params }),
+  getEntries: (params) => {
+    console.log('🥗 Get nutrition entries:', params);
+    return api.get('/nutrition', { params });
+  },
   getStats: (params) => api.get('/nutrition/stats', { params }),
   getWeeklyComparison: (params) => api.get('/nutrition/weekly-comparison', { params }),
   addEntry: (data) => api.post('/nutrition', data),
@@ -79,7 +113,10 @@ export const nutritionAPI = {
 
 // Workout API
 export const workoutAPI = {
-  getEntries: (params) => api.get('/workouts', { params }),
+  getEntries: (params) => {
+    console.log('💪 Get workout entries:', params);
+    return api.get('/workouts', { params });
+  },
   getStats: (params) => api.get('/workouts/stats', { params }),
   getWeeklyComparison: (params) => api.get('/workouts/weekly-comparison', { params }),
   addEntry: (data) => api.post('/workouts', data),
@@ -89,7 +126,10 @@ export const workoutAPI = {
 
 // Progress API
 export const progressAPI = {
-  getEntries: (params) => api.get('/progress', { params }),
+  getEntries: (params) => {
+    console.log('📊 Get progress entries:', params);
+    return api.get('/progress', { params });
+  },
   getWeeklyComparison: (params) => api.get('/progress/weekly-comparison', { params }),
   addEntry: (data) => api.post('/progress', data),
   updateEntry: (id, data) => api.put(`/progress/${id}`, data),
@@ -98,10 +138,24 @@ export const progressAPI = {
 
 // Analytics API
 export const analyticsAPI = {
-  getDashboardData: () => api.get('/analytics/dashboard'),
-  getWeeklyComparisons: () => api.get('/analytics/weekly-comparisons'),
+  getDashboardData: () => {
+    console.log('📈 Get dashboard data');
+    return api.get('/analytics/dashboard');
+  },
+  getWeeklyComparisons: () => {
+    console.log('📊 Get weekly comparisons');
+    return api.get('/analytics/weekly-comparisons');
+  },
   getNutritionAnalytics: (params) => api.get('/analytics/nutrition', { params }),
   getWorkoutAnalytics: (params) => api.get('/analytics/workouts', { params })
+};
+
+// Notification API
+export const notificationAPI = {
+  getNotifications: () => api.get('/notifications'),
+  markAsRead: (id) => api.put(`/notifications/${id}/read`),
+  markAllAsRead: () => api.put('/notifications/read-all'),
+  deleteNotification: (id) => api.delete(`/notifications/${id}`)
 };
 
 export default api;
