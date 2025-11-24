@@ -17,15 +17,15 @@ services:
       - key: RUN_DB_SYNC
         value: true
       - key: DB_HOST
-        value: dpg-d3mbuc2dbo4c73bnsdag-a.ohio-postgres.render.com
+        value: dpg-d4i7vomr433s73c8ivn0-a.oregon-postgres.render.com  # ← UPDATE THIS
       - key: DB_PORT
         value: 5432
       - key: DB_NAME
-        value: fitlife_6qjm
+        value: mydb_j7qm  # ← UPDATE THIS
       - key: DB_USER
         value: fitlifetracker_user
       - key: DB_PASSWORD
-        value: JzY5hGCodgWsQMq59z3HO93ZwJz0AZBR
+        value: qCE5wNJSyl6jct1eNQSgeCd0dRKzHInZ  # ← UPDATE THIS
       - key: CLIENT_URL
         value: https://fitlifetracker.vercel.app
     healthCheckPath: /health
