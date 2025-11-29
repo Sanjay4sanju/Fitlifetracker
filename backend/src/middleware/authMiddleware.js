@@ -18,8 +18,19 @@ export const authenticateToken = async (req, res, next) => {
       });
     }
 
-    console.log('🔐 Verifying token...');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Check if JWT secret is properly configured
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret || jwtSecret === 'fallback-secret' || jwtSecret.includes('your_super_secure')) {
+      console.error('❌ JWT_SECRET not properly configured in production');
+      return res.status(500).json({
+        message: 'Server authentication configuration error',
+        success: false,
+        error: 'JWT secret not configured'
+      });
+    }
+
+    console.log('🔐 Verifying token with configured secret...');
+    const decoded = jwt.verify(token, jwtSecret);
     console.log('✅ Token decoded:', decoded);
 
     const user = await User.findByPk(decoded.userId);
@@ -42,6 +53,14 @@ export const authenticateToken = async (req, res, next) => {
     console.log('❌ Auth middleware error:', error.name, error.message);
     
     if (error.name === 'JsonWebTokenError') {
+      if (error.message.includes('secret')) {
+        console.error('💥 JWT SECRET MISCONFIGURED:', error.message);
+        return res.status(500).json({
+          message: 'Server configuration error - JWT secret missing',
+          success: false,
+          error: 'JWT secret not configured properly'
+        });
+      }
       return res.status(403).json({ 
         message: 'Invalid token format',
         success: false
