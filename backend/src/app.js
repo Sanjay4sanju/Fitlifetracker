@@ -50,7 +50,7 @@ const corsOptions = {
     const allowedDomains = [
       'localhost:3000',
       'localhost:5173',
-      'fitlifetracker.vercel.app', // ADDED THIS EXACT DOMAIN
+      'fitlifetracker.vercel.app',
       'fitlifetracker-v1.vercel.app',
       'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
@@ -94,6 +94,16 @@ app.use((req, res, next) => {
 
 console.log('🔄 Mounting routes...');
 
+// Check JWT configuration on startup
+console.log('🔐 JWT Configuration Check:');
+console.log('   JWT_SECRET configured:', process.env.JWT_SECRET ? 'Yes' : 'NO - THIS WILL CAUSE ERRORS');
+console.log('   JWT_REFRESH_SECRET configured:', process.env.JWT_REFRESH_SECRET ? 'Yes' : 'NO - THIS WILL CAUSE ERRORS');
+
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.includes('your_super_secure')) {
+  console.error('💥 CRITICAL: JWT_SECRET not properly configured in environment variables');
+  console.error('   Please set JWT_SECRET in your production environment');
+}
+
 // Mount routes synchronously
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -136,8 +146,9 @@ app.get('/api/direct-test', (req, res) => {
     message: 'Direct test route working!',
     cors: 'CORS should be working now',
     timestamp: new Date().toISOString(),
+    jwtConfigured: !!process.env.JWT_SECRET && !process.env.JWT_SECRET.includes('your_super_secure'),
     allowedDomains: [
-      'fitlifetracker.vercel.app', // ADDED
+      'fitlifetracker.vercel.app',
       'fitlifetracker-v1.vercel.app',
       'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
@@ -159,9 +170,10 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     memory: process.memoryUsage(),
     environment: process.env.NODE_ENV,
+    jwtConfigured: !!process.env.JWT_SECRET && !process.env.JWT_SECRET.includes('your_super_secure'),
     cors: 'Enabled for all Vercel domains',
     allowedDomains: [
-      'fitlifetracker.vercel.app', // ADDED
+      'fitlifetracker.vercel.app',
       'fitlifetracker-v1.vercel.app',
       'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
@@ -179,9 +191,10 @@ app.get('/api', (req, res) => {
     message: 'FitLifeTracker API v1.0',
     version: '1.0.0',
     environment: process.env.NODE_ENV,
+    jwtConfigured: !!process.env.JWT_SECRET && !process.env.JWT_SECRET.includes('your_super_secure'),
     cors: 'Enabled for Vercel deployments',
     allowedOrigins: [
-      'fitlifetracker.vercel.app', // ADDED
+      'fitlifetracker.vercel.app',
       'fitlifetracker-v1.vercel.app',
       'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
       'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
@@ -243,7 +256,7 @@ app.use((err, req, res, next) => {
       success: false,
       details: 'Your origin is not in the allowed list',
       allowedOrigins: [
-        'fitlifetracker.vercel.app', // ADDED
+        'fitlifetracker.vercel.app',
         'fitlifetracker-v1.vercel.app',
         'fitlifetracker-v1-git-main-john-devs-projects-dc2575c3.vercel.app',
         'fitlifetracker-v1-6g8r5vj32-john-devs-projects-dc2575c3.vercel.app',
