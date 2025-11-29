@@ -5,13 +5,29 @@ import { Sequelize } from 'sequelize';
 const { Op } = Sequelize;
 
 const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET || 'fallback-secret', {
+  const secret = process.env.JWT_SECRET;
+  
+  // Validate JWT secret configuration
+  if (!secret || secret === 'fallback-secret' || secret.includes('your_super_secure')) {
+    console.error('💥 JWT_SECRET not properly configured:', secret);
+    throw new Error('JWT_SECRET not properly configured in environment variables');
+  }
+  
+  return jwt.sign({ userId }, secret, {
     expiresIn: process.env.JWT_EXPIRES_IN || '24h',
   });
 };
 
 const generateRefreshToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret', {
+  const secret = process.env.JWT_REFRESH_SECRET;
+  
+  // Validate JWT refresh secret configuration
+  if (!secret || secret === 'fallback-refresh-secret' || secret.includes('your_super_secure')) {
+    console.error('💥 JWT_REFRESH_SECRET not properly configured:', secret);
+    throw new Error('JWT_REFRESH_SECRET not properly configured in environment variables');
+  }
+  
+  return jwt.sign({ userId }, secret, {
     expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
   });
 };
@@ -51,6 +67,15 @@ export const register = async (req, res, next) => {
       });
     }
 
+    // Validate JWT configuration before proceeding
+    if (!process.env.JWT_SECRET || process.env.JWT_SECRET.includes('your_super_secure')) {
+      console.error('❌ JWT_SECRET not configured for registration');
+      return res.status(500).json({
+        message: 'Server configuration error - authentication not configured',
+        error: 'JWT_SECRET environment variable missing or invalid'
+      });
+    }
+
     // Create user
     const user = await User.create({
       username,
@@ -83,6 +108,14 @@ export const register = async (req, res, next) => {
     });
   } catch (error) {
     console.error('💥 Registration error:', error);
+    
+    if (error.message.includes('JWT_SECRET')) {
+      return res.status(500).json({
+        message: 'Server authentication configuration error',
+        error: 'JWT secret not properly configured'
+      });
+    }
+    
     res.status(500).json({ 
       message: 'Internal server error during registration',
       error: error.message 
@@ -110,6 +143,15 @@ export const login = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    // Validate JWT configuration
+    if (!process.env.JWT_SECRET || process.env.JWT_SECRET.includes('your_super_secure')) {
+      console.error('❌ JWT_SECRET not configured for login');
+      return res.status(500).json({
+        message: 'Server configuration error - authentication not configured',
+        error: 'JWT_SECRET environment variable missing'
+      });
+    }
+
     // Update last login
     user.lastLogin = new Date();
     await user.save();
@@ -131,6 +173,14 @@ export const login = async (req, res, next) => {
     });
   } catch (error) {
     console.error('💥 Login error:', error);
+    
+    if (error.message.includes('JWT_SECRET')) {
+      return res.status(500).json({
+        message: 'Server authentication configuration error',
+        error: 'JWT secret not properly configured'
+      });
+    }
+    
     res.status(500).json({ 
       message: 'Internal server error during login',
       error: error.message 
@@ -146,7 +196,16 @@ export const refreshToken = async (req, res, next) => {
       return res.status(401).json({ message: 'Refresh token required' });
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret');
+    // Validate refresh secret configuration
+    if (!process.env.JWT_REFRESH_SECRET || process.env.JWT_REFRESH_SECRET.includes('your_super_secure')) {
+      console.error('❌ JWT_REFRESH_SECRET not configured');
+      return res.status(500).json({
+        message: 'Server configuration error',
+        error: 'JWT refresh secret not configured'
+      });
+    }
+
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     const user = await User.findByPk(decoded.userId);
 
     if (!user) {
@@ -162,6 +221,14 @@ export const refreshToken = async (req, res, next) => {
     });
   } catch (error) {
     console.error('Refresh token error:', error);
+    
+    if (error.message.includes('JWT_SECRET')) {
+      return res.status(500).json({
+        message: 'Server configuration error',
+        error: 'JWT secrets not properly configured'
+      });
+    }
+    
     res.status(403).json({ message: 'Invalid refresh token' });
   }
 };
