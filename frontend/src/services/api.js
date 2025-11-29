@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from 'axios'; 
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://fitlifetracker-1.onrender.com/api';
 
 // Create axios instance
 const api = axios.create({
@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000,
 });
 
 // Request interceptor to add auth token
@@ -17,9 +18,16 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, {
+      withAuth: !!token,
+      baseURL: config.baseURL
+    });
+    
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -27,16 +35,27 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
-    if (response.config.url.includes('/auth/')) {
-      return response;
-    }
+    console.log(`✅ ${response.config.method?.toUpperCase()} ${response.config.url} - Status: ${response.status}`);
     return response.data;
   },
   (error) => {
+    console.error(`❌ API Error ${error.config?.method?.toUpperCase()} ${error.config?.url}:`, {
+      status: error.response?.status,
+      message: error.response?.data?.message,
+      data: error.response?.data
+    });
+    
     if (error.response?.status === 401) {
+      console.log('🔄 401 Unauthorized - Removing token and redirecting to login');
       localStorage.removeItem('token');
       window.location.href = '/login';
+    } else if (error.response?.status === 403) {
+      console.log('🔒 403 Forbidden - Possible JWT configuration issue');
+      // Don't logout immediately for 403, might be server configuration
+    } else if (error.code === 'NETWORK_ERROR' || error.code === 'ECONNREFUSED') {
+      console.error('🌐 Network error - Backend might be down');
     }
+    
     return Promise.reject(error);
   }
 );
@@ -102,6 +121,18 @@ export const analyticsAPI = {
   getWeeklyComparisons: () => api.get('/analytics/weekly-comparisons'),
   getNutritionAnalytics: (params) => api.get('/analytics/nutrition', { params }),
   getWorkoutAnalytics: (params) => api.get('/analytics/workouts', { params })
+};
+
+// Test connection to backend
+export const testConnection = async () => {
+  try {
+    const response = await api.get('/direct-test');
+    console.log('✅ Backend connection test:', response);
+    return { success: true, data: response };
+  } catch (error) {
+    console.error('❌ Backend connection test failed:', error);
+    return { success: false, error };
+  }
 };
 
 export default api;
